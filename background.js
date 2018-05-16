@@ -1,4 +1,4 @@
-var scriptFiles = ['./js/common.js', 'lib/jszip/jszip.min.js'];
+var scriptFiles = ['js/common.js', 'lib/jszip/jszip.min.js'];
 
 var badge = {}
 badge.tabId = null;
@@ -22,19 +22,21 @@ badge.render = function() {
 };
 
 chrome.webRequest.onCompleted.addListener(function (details) {
-    for (var i in scriptFiles) {
-        chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
+    if (details.method == 'HEAD' && details.statusCode == 200) {
+        for (var i in scriptFiles) {
+            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
+        }
+        chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
+        chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
+        chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load logic ugoira
     }
-    chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
-    chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
-    chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load logic ugoira
 }, {
     urls: [
-        "*://*.pixiv.net/member_illust.php?mode=medium&illust_id=*"
+        "*://*.pximg.net/img-zip-ugoira/img/*/*/*/*/*/*/*_ugoira*.zip"
     ]
 });
 
-chrome.webRequest.onResponseStarted.addListener(function(details) {
+chrome.webRequest.onCompleted.addListener(function(details) {
     if (details.frameId == 0) {
         for (var i in scriptFiles) {
             chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
