@@ -21,19 +21,18 @@ badge.render = function() {
     chrome.browserAction.setBadgeBackgroundColor({color: this.bgColor, tabId: this.tabId});
 };
 
-chrome.webRequest.onBeforeRequest.addListener(function(details) {
-    if (details.method == "HEAD") {
-        for (var i in scriptFiles) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
-        }
-        chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
-        chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
-        chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load logic ugoira
+chrome.webRequest.onCompleted.addListener(function (details) {
+    for (var i in scriptFiles) {
+        chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
     }
-}, {urls: [
-    "*://*.pixiv.net/img-zip-ugoira/img/*/*/*/*/*/*/*_ugoira*.zip",
-    "*://*.pximg.net/img-zip-ugoira/img/*/*/*/*/*/*/*_ugoira*.zip"
-]});
+    chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
+    chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
+    chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load logic ugoira
+}, {
+    urls: [
+        "*://*.pixiv.net/member_illust.php?mode=medium&illust_id=*"
+    ]
+});
 
 chrome.webRequest.onResponseStarted.addListener(function(details) {
     if (details.frameId == 0) {
