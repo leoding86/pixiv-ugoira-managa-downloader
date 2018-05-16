@@ -1,5 +1,5 @@
 var _pumd = window._pumd = {};
-
+console.log('common.js is loaded');
 _pumd.common = (function () {
     let common = window.common = {
         metas   : {},
@@ -70,6 +70,10 @@ _pumd.common = (function () {
         title    : {content : common.lan.msg('title'), key : 'illustTitle'},
         author   : {content : common.lan.msg('author'), key : 'userName'},
         authorId : {content : common.lan.msg('author_id'), key : 'userId'}
+    }
+
+    common.classname = function(classname) {
+        return '_pumd_' + classname;
     }
 
     return common;
