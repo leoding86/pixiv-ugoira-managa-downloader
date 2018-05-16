@@ -1,4 +1,4 @@
-(function() {
+(function(common, button) {
     var pixivContext = common.getTargetPageVar('pixiv.context', 'object');
     var zip = new JSZip();
     var fullSizePagesA = document.querySelectorAll('a.full-size-container');
@@ -45,4 +45,4 @@
     }
 
     doChunk();
-})();
+})(_pumd.common, _pumd.button);

@@ -1,6 +1,5 @@
-(function(){
+(function(common, button){
     var pixivContext = common.getTargetPageVar('pixiv.context', 'object');
-    console.log(pixivContext);
     var pixivContextData = null;
     var zipData = null;
     var btnWrapper = null;
@@ -204,4 +203,4 @@
 
         return size;
     }
-})();
+})(_pumd.common, _pumd.button);

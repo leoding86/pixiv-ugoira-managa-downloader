@@ -1,4 +1,4 @@
-(function(window){
+(function(window, common){
     let setting = {
         timeout : null,
         msg     : function(string) {
@@ -77,4 +77,4 @@
             onSort: usedMetasSortHandle
         });
     });
-})(window);
+})(window, _pumd.common);
