@@ -1,0 +1,65 @@
+{
+   "author": {
+      "message": "Author"
+   },
+   "author_id": {
+      "message": "Author ID"
+   },
+   "downloadFullscreenZipFile": {
+      "message": "Download fullscreen zip"
+   },
+   "downloadNormalZipFile": {
+      "message": "Download normal zip"
+   },
+   "downloadZipFile": {
+      "message": "Download zip"
+   },
+   "enable_ugoira_meta": {
+      "message": "Metas can use (Drag to select)"
+   },
+   "extDescription": {
+      "message": "Convert the ugoira on Pixiv to GIF file, and pack the images of manga to download."
+   },
+   "extName": {
+      "message": "Pixiv ugoira & manga downloader"
+   },
+   "generate_btn_error_text": {
+      "message": "Error"
+   },
+   "generate_gif_btn_complete_text": {
+      "message": "Save GIF"
+   },
+   "generate_gif_btn_text": {
+      "message": "Generate GIF"
+   },
+   "generate_webm_btn_complete_text": {
+      "message": "Save WebM"
+   },
+   "generate_webm_btn_text": {
+      "message": "Generate WebM"
+   },
+   "generating_webm": {
+      "message": "Compiling WebM"
+   },
+   "id": {
+      "message": "ID"
+   },
+   "rename_ugoira_file": {
+      "message": "Rename ugoira file"
+   },
+   "setting": {
+      "message": "Setting"
+   },
+   "setting_not_saved": {
+      "message": "Save setting failed"
+   },
+   "setting_saved": {
+      "message": "Setting saved"
+   },
+   "title": {
+      "message": "Title"
+   },
+   "used_ugoira_meta": {
+      "message": "Metas is in used"
+   }
+}

@@ -1,0 +1,65 @@
+{
+   "author": {
+      "message": "画师"
+   },
+   "author_id": {
+      "message": "画师编号"
+   },
+   "downloadFullscreenZipFile": {
+      "message": "下载全屏zip包"
+   },
+   "downloadNormalZipFile": {
+      "message": "下载普通zip包"
+   },
+   "downloadZipFile": {
+      "message": "下载zip包"
+   },
+   "enable_ugoira_meta": {
+      "message": "可用的元数据（拖动选择）"
+   },
+   "extDescription": {
+      "message": "能够将Pixiv上的动图保存为GIF图片，将漫画以原始尺寸打包下载。"
+   },
+   "extName": {
+      "message": "Pixiv动图&漫画下载器"
+   },
+   "generate_gif_btn_complete_text": {
+      "message": "保存GIF"
+   },
+   "generate_gif_btn_error_download_text": {
+      "message": "下载出错"
+   },
+   "generate_gif_btn_text": {
+      "message": "生成GIF"
+   },
+   "generate_webm_btn_complete_text": {
+      "message": "保存WebM"
+   },
+   "generate_webm_btn_text": {
+      "message": "生成WebM"
+   },
+   "generating_webm": {
+      "message": "生成WebM中"
+   },
+   "id": {
+      "message": "编号"
+   },
+   "rename_ugoira_file": {
+      "message": "命名动图下载文件"
+   },
+   "setting": {
+      "message": "设置"
+   },
+   "setting_not_saved": {
+      "message": "设置保存出错"
+   },
+   "setting_saved": {
+      "message": "设置已保存"
+   },
+   "title": {
+      "message": "标题"
+   },
+   "used_ugoira_meta": {
+      "message": "已选择的元数据"
+   }
+}

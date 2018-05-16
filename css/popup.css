@@ -1,0 +1,11 @@
+html, body {width:310px;}
+
+/* 文本 */
+span#text-setting::before {content: '__MSG_setting__';}
+#text-rename_ugoira_file::before {content: '__MSG_rename_ugoira_file__';}
+#text-enable_ugoira_meta::before {content: '__MSG_enable_ugoira_meta__';}
+#text-used_ugoira_meta::before {content: '__MSG_used_ugoira_meta__';}
+
+button.meta {display:block; margin-left:3px; float:left;}
+.panel-body {padding:10px;}
+.head-title {border-bottom:1px solid #ccc;}
