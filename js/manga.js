@@ -1,4 +1,4 @@
-(function(common, button) {
+(function(common, button, RetryTicker) {
     function createDownloadButtonWrapper($buttons) {
         let $wrapper = document.createElement('div');
         $wrapper.className = common.classname('download-btns-wrapper');
@@ -11,13 +11,109 @@
         return $wrapper;
     }
 
-    var downloading = false;
-    var $wrapper = createDownloadButtonWrapper();
-    var pixivContext = common.getTargetPageVar('pixiv.context', 'object');
-    var $downloadBtn;
-    var startIndex = 0;
-    var splitSize = 100;
-    var chunks = [];
+    /**
+     * Request image page content
+     * @param {string} url Manga page image url
+     */
+    function requestImagePage(url) {
+        let _this = this;
+
+        return new Promise(function (resolve, reject) {
+            var pxhr = new XMLHttpRequest();
+            pxhr.open('get', url);
+            pxhr.onload = function() {
+                resolve(this.responseText); 
+            };
+            pxhr.onerror = function() {
+                if (!retryTicker.reachLimit()) {
+                    resolve(_this.requestImagePage(url));
+                } else {
+                    reject();
+                }
+            };
+            pxhr.send();
+        });
+    }
+
+    /**
+     * 
+     * @param {String} url Manga image url
+     * @param {JSZip} zip JSZip instance
+     */
+    function saveImage(url, zip) {
+        let _this = this;
+
+        return new Promise(function (resolve, reject) {
+            var ixhr = new XMLHttpRequest();
+            ixhr.overrideMimeType('text/plain; charset=x-user-defined');
+            ixhr.open('get', url);
+            ixhr.onload = function () {
+                zip.file((this.responseURL.match(/\d+\.[^.]+$/))[0], this.responseText, {binary: true});
+                resolve();
+            };
+            ixhr.onerror = function() {
+                if (!retryTicker.reachLimit()) {
+                    resolve(_this.saveImage(url, zip));
+                } else {
+                    reject();
+                }
+            };
+            ixhr.send();
+        })
+    }
+
+    function Queue() {
+        this.stack = [];
+        this.index = 0;
+        this.complete = 0;
+        this.fail = 0;
+        this.total = 0;
+    }
+
+    Queue.prototype = {
+        add: function (item) {
+            this.stack.push(item);
+            this.total = this.stack.length;
+        },
+
+        next: function () {
+            if (this.index < this.stack.length) {
+                this.index++;
+            }
+        },
+
+        current: function () {
+            return this.stack[this.index];
+        },
+
+        start: function (callback, done) {
+            let _this = this,
+                item;
+
+            if (item = this.current()) {
+                callback(item).then(function () {
+                    this.complete++;
+                }).catch(function () {
+                    this.fail++;
+                }).finally(function () {
+                    _this.next();
+                    _this.start(callback, done);
+                });
+            } else {
+                done();
+            }
+        }
+    }
+
+    var downloading = false,
+        retryTicker = new RetryTicker(),
+        queue = new Queue();
+        $wrapper = createDownloadButtonWrapper(),
+        pixivContext = common.getTargetPageVar('pixiv.context', 'object'),
+        $downloadBtn = null,
+        startIndex = 0,
+        splitSize = 100,
+        chunks = [];
 
     while (startIndex < pixivContext.images.length - 1) {
         var chunk = {};
@@ -50,31 +146,26 @@
             zip = new JSZip();
 
             for (var i = chunk.start; i < chunk.end; i++) {
-                var pageUrl = fullSizePageA[i].href;
-                var pxhr = new XMLHttpRequest();
-                pxhr.open('get', pageUrl);
-                pxhr.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var originalUrl = (this.responseText.match(/https?:\/\/i\d?.(?:pixiv|pximg)\.net\/img\-original\/img\/[^"']+\.(?:png|jpg|jpeg|gif)/im))[0];
-                        var ixhr = new XMLHttpRequest();
-                        ixhr.overrideMimeType('text/plain; charset=x-user-defined');
-                        ixhr.open('get', originalUrl);
-                        ixhr.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                var _this = this;
-                                zip.file((_this.responseURL.match(/\d+\.[^.]+$/))[0], _this.responseText, {binary: true});
-
-                                // complete notice
-                            }
-                        };
-                        ixhr.send();
-                    }
-                };
-                pxhr.send();
+                queue.add(fullSizePageA[i].href);
             }
 
-            // waiting
-            
+            queue.start(function (url) {
+                console.log(queue.complete + '/' + queue.fail + '/' + queue.total)
+                return new Promise(function (resolve, reject) {
+                    requestImagePage(url).then(function (body) {
+                        var originalUrl = (body.match(/https?:\/\/i\d?.(?:pixiv|pximg)\.net\/img\-original\/img\/[^"']+\.(?:png|jpg|jpeg|gif)/im))[0];
+                        saveImage(originalUrl, zip).then(function () {
+                            resolve();
+                        }).catch(function () {
+                            reject();
+                        });
+                    }).catch(function () {
+                        reject();
+                    })
+                });
+            }, function () {
+                console.log(zip);
+            });
         });
     });
-})(_pumd.common, _pumd.button);
+})(_pumd.common, _pumd.button, _pumd.RetryTicker);
