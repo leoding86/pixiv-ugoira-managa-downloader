@@ -68,6 +68,8 @@
         this.complete = 0;
         this.fail = 0;
         this.total = 0;
+        this.onItemComplete;
+        this.onItemFail;
     }
 
     Queue.prototype = {
@@ -92,15 +94,23 @@
 
             if (item = this.current()) {
                 callback(item).then(function () {
-                    this.complete++;
+                    _this.complete++;
+                    if (_this.onItemComplete) {
+                        _this.onItemComplete.call(_this);
+                    }
                 }).catch(function () {
-                    this.fail++;
+                    _this.fail++;
+                    if (_this.onItemFail) {
+                        _this.onItemFail.call(_this, this.index);
+                    }
                 }).finally(function () {
                     _this.next();
                     _this.start(callback, done);
                 });
             } else {
-                done();
+                if (_this.onDone) {
+                    _this.onDone.call(_this);
+                }
             }
         }
     }
@@ -134,23 +144,49 @@
     var fullSizePageA = document.querySelectorAll('a.full-size-container');
 
     chunks.forEach(function (chunk) {
-        $downloadBtn = button.addBtn(common.lan.msg('downloadPage') + ' ' + (parseInt(chunk.start) + 1) + '-' + (parseInt(chunk.end) + 1), common.classname("download-btn" + chunk.start + '-' + chunk.end), $wrapper);
+        let startPage = parseInt(chunk.start) + 1,
+            endPage = parseInt(chunk.end) + 1,
+            fileName = pixivContext.illustId + '_' + startPage + '-' + endPage + '.zip';
+
+        $downloadBtn = button.addBtn(common.lan.msg('downloadPage') + ' ' + startPage + '-' + endPage, common.classname("download-btn_" + startPage + '-' + endPage), $wrapper);
         $downloadBtn.style = "display:block;padding:8px;background:#fff;border-bottom:1px solid #eee";
         $downloadBtn.addEventListener("click", function () {
+            let $btn = this;
+            let oldText = $btn.innerText;
+
+            if ($btn.getAttribute('complete')) {
+                return;
+            }
+
             if (downloading) {
-                alert('Downloading, please wait...');
+                alert(common.lan.msg('waitDownload'));
                 return;
             }
 
             downloading = true;
             zip = new JSZip();
 
-            for (var i = chunk.start; i < chunk.end; i++) {
+            queue.onItemComplete = function () {
+                $btn.innerText = oldText + ' C:' + queue.complete + '/F:' + queue.fail + '/T:' + queue.total;
+            }
+
+            queue.onItemFail = function (page) {
+                $btn.innerText = oldText + ' C:' + queue.complete + '/F:' + queue.fail + '/T:' + queue.total;
+            }
+
+            queue.onDone = function () {
+                $btn.setAttribute('complete', true);
+                $btn.setAttribute('download', fileName);
+                $btn.href = URL.createObjectURL(zip.generate({type: "blob"}));
+                $btn.innerText = common.lan.msg('save_page') + ' ' + startPage + '-' + endPage;
+                downloading = false;
+            }
+
+            for (var i = chunk.start; i <= chunk.end; i++) {
                 queue.add(fullSizePageA[i].href);
             }
 
             queue.start(function (url) {
-                console.log(queue.complete + '/' + queue.fail + '/' + queue.total)
                 return new Promise(function (resolve, reject) {
                     requestImagePage(url).then(function (body) {
                         var originalUrl = (body.match(/https?:\/\/i\d?.(?:pixiv|pximg)\.net\/img\-original\/img\/[^"']+\.(?:png|jpg|jpeg|gif)/im))[0];
@@ -163,8 +199,6 @@
                         reject();
                     })
                 });
-            }, function () {
-                console.log(zip);
             });
         });
     });
