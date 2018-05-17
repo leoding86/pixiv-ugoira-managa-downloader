@@ -20,6 +20,9 @@
    "waitDownload": {
       "message": "请等待上一个下载完成"
    },
+   "save_page": {
+      "message": "保存页数"
+   },
    "enable_ugoira_meta": {
       "message": "可用的元数据（拖动选择）"
    },

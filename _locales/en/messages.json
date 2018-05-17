@@ -18,7 +18,10 @@
       "message": "Download page"
    },
    "waitDownload": {
-      "message": "Please wait prev download complete"
+      "message": "Please wait the last download complete"
+   },
+   "save_page": {
+      "message": "Save page"
    },
    "enable_ugoira_meta": {
       "message": "Metas can use (Drag to select)"
