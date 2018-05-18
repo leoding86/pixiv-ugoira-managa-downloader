@@ -44,7 +44,7 @@
         let _this = this;
 
         return new Promise(function (resolve, reject) {
-            var ixhr = new XMLHttpRequest();
+            let ixhr = new XMLHttpRequest();
             ixhr.overrideMimeType('text/plain; charset=x-user-defined');
             ixhr.open('get', url);
             ixhr.onload = function () {
@@ -175,11 +175,15 @@
             }
 
             queue.onDone = function () {
-                $btn.setAttribute('complete', true);
-                $btn.setAttribute('download', fileName);
-                $btn.href = URL.createObjectURL(zip.generate({type: "blob"}));
-                $btn.innerText = common.lan.msg('save_page') + ' ' + startPage + '-' + endPage;
-                downloading = false;
+                zip.generateAsync({
+                    type: 'blob',
+                }).then(function (blob) {
+                    $btn.setAttribute('complete', true);
+                    $btn.setAttribute('download', fileName);
+                    $btn.href = URL.createObjectURL(blob);
+                    $btn.innerText = common.lan.msg('save_page') + ' ' + startPage + '-' + endPage;
+                    downloading = false;
+                });
             }
 
             for (var i = chunk.start; i <= chunk.end; i++) {
