@@ -1,4 +1,4 @@
-var scriptFiles = ['js/common.js', 'lib/jszip/jszip.min.js'];
+var scriptFiles = ['js/common.js', 'lib/jszip/jszip.js'];
 
 var badge = {}
 badge.tabId = null;
