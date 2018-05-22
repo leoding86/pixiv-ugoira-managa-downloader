@@ -50,6 +50,9 @@
    "generating_webm": {
       "message": "生成WebM中"
    },
+   "generating": {
+      "message": "生成中..."
+   },
    "id": {
       "message": "编号"
    },
