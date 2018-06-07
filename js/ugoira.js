@@ -1,5 +1,10 @@
 (function(common, button){
     var pixivContext = common.getTargetPageVar('pixiv.context', 'object');
+
+    if (pixivContext == null) {
+        throw 'It is maybe the newer site. Try other adapter.';
+    }
+
     var pixivContextData = null;
     var zipData = null;
     var btnWrapper = null;

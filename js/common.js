@@ -38,8 +38,12 @@ _pumd.common = (function () {
         document.documentElement.appendChild(injectDom);
         var script = '(function(){';
         script += 'var string = null;';
+        script += 'try {';
         script += 'if (typeof ' + obj + ' == "string") string = ' + obj + ';';
         script += 'else if (typeof ' + obj + ' == "object") string = JSON.stringify(' + obj + ');';
+        script += '} catch (e) {';
+        script += 'string = null';
+        script += '}';
         script += 'document.querySelector("#dom-' + randomStr + '").setAttribute("data", string);';
         script += '})()';
         var injectScript = document.createElement('script');
@@ -74,6 +78,10 @@ _pumd.common = (function () {
 
     common.classname = function(classname) {
         return '_pumd_' + classname;
+    }
+
+    common.objFirst = function(obj) {
+        return obj[Object.keys(obj)[0]];
     }
 
     return common;
