@@ -1,5 +1,3 @@
-console.log('180607/ugoira.js is loaded');
-
 (function(common, Adapter, button){
     let adapter = new Adapter();
     let status = {
@@ -7,7 +5,6 @@ console.log('180607/ugoira.js is loaded');
         generatingWebM: false,
     }
     adapter.inital().then(function (context) {
-        console.log(context);
         // ui staff
         let buttonsWrapper = createButtonsWrapper();
         let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'));

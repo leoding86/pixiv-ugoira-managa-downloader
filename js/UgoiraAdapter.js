@@ -1,5 +1,3 @@
-console.log('Ugoria adatper is loaded');
-
 _pumd.UgoiraAdapter = (function (common) {
     function UgoiraAdapter() {
         this.illustTitle;

@@ -1,5 +1,5 @@
 var _pumd = window._pumd = {};
-console.log('common.js is loaded');
+
 _pumd.common = (function () {
     let common = window.common = {
         metas   : {},
