@@ -53,6 +53,9 @@
    "generating": {
       "message": "Generating"
    },
+   "preparing": {
+      "message": "Preparing"
+   },
    "id": {
       "message": "ID"
    },

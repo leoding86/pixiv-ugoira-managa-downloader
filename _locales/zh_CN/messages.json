@@ -53,6 +53,9 @@
    "generating": {
       "message": "生成中..."
    },
+   "preparing": {
+      "message": "准备生成..."
+   },
    "id": {
       "message": "编号"
    },
