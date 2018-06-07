@@ -50,6 +50,9 @@
    "generating_webm": {
       "message": "Compiling WebM"
    },
+   "generating": {
+      "message": "Generating"
+   },
    "id": {
       "message": "ID"
    },

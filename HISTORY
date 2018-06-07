@@ -2,6 +2,9 @@ Convert the ugoira on Pixiv to GIF or WebM file, and pack the images of manga to
 Notice:
 Only work with old pixiv site! (Because I can't visit the lastest version site)
 ----------------------------------------------
+v1.4.1:
+Fix the problem that cause generate gif or webm function broken.
+
 v1.4:
 Optimiza memory usage for downloading manga.
 
