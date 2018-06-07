@@ -28,7 +28,9 @@ chrome.webRequest.onCompleted.addListener(function (details) {
         }
         chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
         chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
-        chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load logic ugoira
+        chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load elder ugoira
+        chrome.tabs.executeScript(details.tabId, {file: 'js/UgoiraAdapter.js'}) // Ugoria adapter
+        chrome.tabs.executeScript(details.tabId, {file: 'js/180607/ugoira.js'}); // new version ugoria js
     }
 }, {
     urls: [
