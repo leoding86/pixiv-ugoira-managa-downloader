@@ -47,8 +47,40 @@
         });
     }
 
+    let ugoiraQuanlityChange = function (evt) {
+        let settings = { ugoiraQuanlity: 10 };
+
+        for (let i in this.options) {
+            if (this.options[i].selected) {
+                settings.ugoiraQuanlity = this.options[i].value;
+                common.storage.set(settings, function () {
+                    if (chrome.runtime.lastError == '' || chrome.runtime.lastError == undefined) {
+                        setting.msg(common.lan.msg('setting_saved'));
+                        // console.log('设置已保存');
+                    } else {
+                        setting.msg(common.lan.msg('setting_error'));
+                        // console.log(chrome.runtime.lastError);
+                    }
+                });
+                break;
+            }
+        }
+    }
+
     let enableMetasEl = document.querySelector('#enable-metas');
     let usedMetasEl = document.querySelector('#used-metas');
+    let ugoiraQuanlityEl = document.querySelector('#ugoira-quanlity');
+    let ugoiraQuanlityList = [
+        {value: 1, text: common.lan.msg('ugoira_best')},
+        {value: 5, text: common.lan.msg('ugoira_good')},
+        {value: 10, text: common.lan.msg('ugoira_normal')},
+    ];
+    for (let i in ugoiraQuanlityList) {
+        let option = document.createElement('option');
+        option.value = ugoiraQuanlityList[i].value;
+        option.text = ugoiraQuanlityList[i].text;
+        ugoiraQuanlityEl.appendChild(option);
+    }
 
     common.storage.get(null, function(items) {
         let enableMetas = common.metas; // 元数据配置
@@ -76,5 +108,15 @@
             animation: 150,
             onSort: usedMetasSortHandle
         });
+
+        if (items.ugoiraQuanlity === undefined) items.ugoiraQuanlity = 10;
+        for (let i in ugoiraQuanlityEl.options) {
+            if (ugoiraQuanlityEl.options[i].value == items.ugoiraQuanlity) {
+                ugoiraQuanlityEl.options[i].selected = 'selected';
+                break;
+            }
+        }
+
+        ugoiraQuanlityEl.addEventListener('change', ugoiraQuanlityChange);
     });
 })(window, _pumd.common);
