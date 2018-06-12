@@ -76,5 +76,17 @@
    },
    "used_ugoira_meta": {
       "message": "Metas is in used"
+   },
+   "ugoira_quanlity": {
+       "message": "Ugoria quanlity"
+   },
+   "ugoira_best": {
+       "message": "Best"
+   },
+   "ugoira_good": {
+       "message": "Good"
+   },
+   "ugoira_normal": {
+       "message": "Normal"
    }
 }

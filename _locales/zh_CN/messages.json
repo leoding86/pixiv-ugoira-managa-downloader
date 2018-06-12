@@ -76,5 +76,17 @@
    },
    "used_ugoira_meta": {
       "message": "已选择的元数据"
+   },
+   "ugoira_quanlity": {
+       "message": "生成GIF质量"
+   },
+   "ugoira_best": {
+       "message": "极好"
+   },
+   "ugoira_good": {
+       "message": "较好"
+   },
+   "ugoira_normal": {
+       "message": "普通"
    }
 }
