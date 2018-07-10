@@ -19,5 +19,6 @@
    "name": "__MSG_extName__",
    "permissions": [ "webRequest", "storage", "*://*.pixiv.net/*", "*://*.pximg.net/*" ],
    "version": "1.5.1",
-   "web_accessible_resources": [ "img/download.png" ]
+   "web_accessible_resources": [ "img/download.png" ],
+   "options_page": "pages/dist/index.html"
 }
