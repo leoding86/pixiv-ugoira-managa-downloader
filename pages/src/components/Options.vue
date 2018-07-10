@@ -60,25 +60,29 @@ export default {
                     value: 1
                 }
             ],
-            ugoiraQuanlity: null
+            ugoiraQuanlity: 10
         }
     },
     mounted () {
         this.ugoiraQuanlity = window.cr.storage.items.ugoiraQuanlity - 0;
     },
+
     methods: {
         tileClickHandler: function (evt) {
             console.log(1);
         },
+
         showUgoiraSaveDialog: function (evt) {
-            this.$router.push('ugoira-save-title');
+            this.$router.push('ugoira-save-title')
         },
+
         showUgoiraExtendDialog: function (evt) {
-            this.$router.push('ugoira-extend');
+            this.$router.push('ugoira-extend')
         },
+
         onUgoiraQuanlityChangeHandler: function () {
-            let _this = this;
-            cr._s.set({ 'ugoiraQuanlity': _this.ugoiraQuanlity } );
+            let _this = this
+            cr._s.set({ 'ugoiraQuanlity': _this.ugoiraQuanlity } )
         }
     }
 }
