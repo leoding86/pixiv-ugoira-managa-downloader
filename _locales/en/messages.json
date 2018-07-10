@@ -88,5 +88,23 @@
    },
    "ugoira_normal": {
        "message": "Normal"
+   },
+   "quanlity": {
+       "message": "Quanlity"
+   },
+   "extend_duration": {
+       "message": "Extend duration"
+   },
+   "extend_duration_desc": {
+       "message": "Extend ugoira duration when the duration is not expected"
+   },
+   "enable_repeat_title": {
+       "message": "Enable repeat when ugoira duration under selected duration"
+   },
+   "enable_repeat_desc": {
+       "message": "Repeat disabled when 0 is selected"
+   },
+   "extend_duration_seconds_title": {
+       "message": "Extend ugoira duration to selected duration at least"
    }
 }

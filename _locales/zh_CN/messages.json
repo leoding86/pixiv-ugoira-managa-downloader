@@ -88,5 +88,23 @@
    },
    "ugoira_normal": {
        "message": "普通"
+   },
+   "quanlity": {
+       "message": "质量"
+   },
+   "extend_duration": {
+       "message": "延长时长"
+   },
+   "extend_duration_desc": {
+       "message": "当原始动图时长低于选择的时长时额外延长动图时长"
+   },
+   "enable_repeat_title": {
+       "message": "原始动图时长"
+   },
+   "enable_repeat_desc": {
+       "message": "选择0时禁用延长时长"
+   },
+   "extend_duration_seconds_title": {
+       "message": "至少延长动图时长至选择的时长"
    }
 }
