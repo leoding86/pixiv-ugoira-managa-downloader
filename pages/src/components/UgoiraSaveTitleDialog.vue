@@ -22,6 +22,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import cr from '@/modules/cr'
 
 export default {
   name: 'UgoiraSaveTitleDialog',
@@ -61,21 +62,31 @@ export default {
       }
   },
   mounted () {
-      if (null === this.migrateConfig(window.cr.storage.items.titleMetas)) {
-          //
+      if (this.migrateConfig(window.cr.storage.items.titleMetas)) {
+          this.metasConfig = this.migrateConfig(window.cr.storage.items.titleMetas);
       }
   },
   methods: {
       toggleMeta: function (meta) {
           meta.enable = !meta.enable;
-          console.log(this.metasConfig);
+          this.saveMetas(this.metasConfig);
       },
+
       onSortEndHandler: function (evt) {
-          console.log(this.metasConfig);
+          this.saveMetas(this.metasConfig);
       },
+
+      saveMetas: function (metas) {
+          cr._s.set({
+              metasConfig: metas
+          }).then(function () {
+              window.cr.storage.items.metasConfig = metas;
+          });
+      },
+
       migrateConfig: function (metas) {
           if (undefined === metas) {
-              return;
+              return window.cr.storage.items.metasConfig;
           }
 
           try {
@@ -95,7 +106,8 @@ export default {
                   newMetasConfig.push(meta);
               });
 
-              this.metasConfig = newMetasConfig;
+              cr._s.remove('metasConfig');
+              return newMetasConfig;
           } catch (e) {
               console.log(e);
           }
