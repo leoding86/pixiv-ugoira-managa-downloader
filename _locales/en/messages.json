@@ -65,6 +65,9 @@
    "setting": {
       "message": "Setting"
    },
+   "settings": {
+        "message": "Settings"
+   },
    "setting_not_saved": {
       "message": "Save setting failed"
    },
@@ -98,13 +101,28 @@
    "extend_duration_desc": {
        "message": "Extend ugoira duration when the duration is not expected"
    },
-   "enable_repeat_title": {
-       "message": "Enable repeat when ugoira duration under selected duration"
+   "enable_extend_title": {
+       "message": "Enable repeat when ugoira duration under choosen duration"
    },
-   "enable_repeat_desc": {
-       "message": "Repeat disabled when 0 is selected"
+   "enable_extend_desc": {
+       "message": "Extend duration will be disabled when 0 is choosen"
    },
    "extend_duration_seconds_title": {
-       "message": "Extend ugoira duration to selected duration at least"
+       "message": "Extend ugoira duration to choosen duration at least"
+   },
+   "open_settings": {
+       "message": "Open settings"
+   },
+   "open_settings_intro": {
+       "message": "Please right-click the icon and click \"Options\" to open settings page"
+   },
+   "saved_file_title": {
+        "message": "Saved file title"
+   },
+   "saved_file_title_desc": {
+        "message": "Change the saved file title when downloading ugoira"
+   },
+   "drag_click_metas": {
+       "message": "Drag to sort, click to enable/disable meta"
    }
 }

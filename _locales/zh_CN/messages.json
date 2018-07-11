@@ -65,6 +65,9 @@
    "setting": {
       "message": "设置"
    },
+   "settings": {
+        "message": "设置"
+   },
    "setting_not_saved": {
       "message": "设置保存出错"
    },
@@ -98,13 +101,28 @@
    "extend_duration_desc": {
        "message": "当原始动图时长低于选择的时长时额外延长动图时长"
    },
-   "enable_repeat_title": {
+   "enable_extend_title": {
        "message": "原始动图时长"
    },
-   "enable_repeat_desc": {
-       "message": "选择0时禁用延长时长"
+   "enable_extend_desc": {
+       "message": "选择0时将禁用延长时长"
    },
    "extend_duration_seconds_title": {
        "message": "至少延长动图时长至选择的时长"
+   },
+   "open_settings": {
+       "message": "打开设置"
+   },
+   "open_settings_intro": {
+       "message": "请右键点击图标选择\"选项\"进入设置页面"
+   },
+   "saved_file_title": {
+        "message": "保存文件名称"
+   },
+   "saved_file_title_desc": {
+        "message": "修改保存的文件名"
+   },
+   "drag_click_metas": {
+       "message": "拖动排序，点击启用/禁用元数据"
    }
 }
