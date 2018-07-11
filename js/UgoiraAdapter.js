@@ -8,19 +8,28 @@ _pumd.UgoiraAdapter = (function (common) {
         this.illustSrc;
         this.illustOriginalSrc;
         this.illustMimeType;
+        this.illustDuration = 0;
     }
 
     UgoiraAdapter.prototype = {
         inital : function () {
             return new Promise((function(resolve, reject) {
-                let pixivContext = common.getTargetPageVar('globalInitData.preload', 'object');
+                let _this = this;
 
-                if (!pixivContext) {
-                    reject();
-                    return;
-                }
+                chrome.storage.local.get(null, function (items) {
+                    window.cr = {
+                        storage: items
+                    };
 
-                resolve(Adapter180607.run(pixivContext, this));
+                    let pixivContext = common.getTargetPageVar('globalInitData.preload', 'object');
+    
+                    if (!pixivContext) {
+                        reject();
+                        return;
+                    }
+    
+                    resolve(Adapter180607.run(pixivContext, _this));
+                });
             }).bind(this));
         }
     }
@@ -49,6 +58,10 @@ _pumd.UgoiraAdapter = (function (common) {
                     adapter.illustOriginalSrc = response.body.originalSrc;
                     adapter.illustFrames = response.body.frames;
                     adapter.illustMimeType = response.body.mime_type;
+
+                    adapter.illustFrames.forEach(function (frame) {
+                        adapter.illustDuration += --frame.delay;
+                    });
 
                     resolve(adapter);
                 };
