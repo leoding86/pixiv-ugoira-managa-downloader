@@ -4,12 +4,15 @@
         generatingGif: false,
         generatingWebM: false,
     }
+
     adapter.inital().then(function (context) {
         // ui staff
         let buttonsWrapper = createButtonsWrapper();
         let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'));
         downloadZipBtn.el.href = context.illustOriginalSrc;
-        downloadZipBtn.el.download = context.illustId + '_' + context.illustTitle;
+        chrome.storage.local.get('metasConfig', function (items) {
+            downloadZipBtn.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle);
+        });
 
         downloadResources(context.illustOriginalSrc).then(function (zipData) {
             let generateGifButton = new Button(buttonsWrapper, common.lan.msg('generate_gif_btn_text'));
@@ -26,8 +29,8 @@
                     },
                     finished: function (url) {
                         generateGifButton.updateText(common.lan.msg('generate_gif_btn_complete_text'));
-                        chrome.storage.local.get('titleMetas', function(items) {
-                            generateGifButton.el.download = getUgoiraDownloadTitle(items.titleMetas, context, context.illustId + '_' + context.illustTitle);
+                        chrome.storage.local.get('metasConfig', function(items) {
+                            generateGifButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle);
                             generateGifButton.el.href = url;
                         });
                     }
@@ -48,8 +51,8 @@
                     },
                     finished: function (url) {
                         generateWebmButton.updateText(common.lan.msg('generate_webm_btn_complete_text'));
-                        chrome.storage.local.get('titleMetas', function(items) {
-                            generateWebmButton.el.download = getUgoiraDownloadTitle(items.titleMetas, context, context.illustId + '_' + context.illustTitle);
+                        chrome.storage.local.get('metasConfig', function(items) {
+                            generateWebmButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle);
                             generateWebmButton.el.href = url;
                         });
                     }
@@ -126,10 +129,6 @@
                             if (events && typeof events.finished == 'function') {
                                 events.finished(URL.createObjectURL(blob));
                             }
-                            /* 读取命名设置 */
-                            // chrome.storage.local.get('titleMetas', function(items) {
-                            //     button.addDownloadLink('#generate-gif-btn', URL.createObjectURL(blob), getUgoiraDownloadTitle(items.titleMetas, pixivContext.illustTitle));
-                            // });
                         });
         
                         setTimeout(function() {
@@ -142,7 +141,7 @@
         });
     }
     
-    function appendImagesToGifFrame(gif, zip, mimeType, frames, currentIndex) {
+    function appendImagesToGifFrame(gif, zip, mimeType, frames, currentIndex, currentDuration = 0) {
         return new Promise(function (resolve) {
             var index = currentIndex || 0;
 
@@ -151,10 +150,17 @@
                     var imageBase64 = "data:" + mimeType + ";base64," + base64;
                     var image = new Image();
                     image.src = imageBase64;
-                    gif.addFrame(image, {delay: frames[index].delay});
-                    resolve(appendImagesToGifFrame(gif, zip, mimeType, frames, ++index));
+                    gif.addFrame(image, {delay: adapter.illustFrames[index].delay});
+                    resolve(appendImagesToGifFrame(gif, zip, mimeType, frames, index + 1, -(-currentDuration - adapter.illustFrames[index].delay)));
                 });
             } else {
+                // Determine repeat
+                if (window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
+                    window.cr.storage.extendDuration && window.cr.storage.extendDuration * 1000 > currentDuration
+                ) {
+                    index = 0; // reset index
+                    resolve(appendImagesToGifFrame(gif, zip, mimeType, frames, index, -(-currentDuration - adapter.illustFrames[index].delay)));
+                }
                 resolve();
             }
         });
@@ -184,16 +190,13 @@
                         if (events && typeof events.finished == 'function') {
                             events.finished(URL.createObjectURL(output));
                         }
-                        // chrome.storage.local.get('titleMetas', function(items) {
-                        //     button.addDownloadLink('#generate-webm-btn', URL.createObjectURL(output), getUgoiraDownloadTitle(items.titleMetas, pixivContext.illustTitle) + '.webm');
-                        // });
                     });
                 });
             });
         });
     }
 
-    function appendImagesToWebMFrame(encoder, zip, mimeType, frames, size, currentIndex) {
+    function appendImagesToWebMFrame(encoder, zip, mimeType, frames, size, currentIndex, currentDuration = 0) {
         return new Promise(function (resolve, reject) {
             var index = currentIndex || 0;
 
@@ -203,10 +206,18 @@
                     getCanvasFromDataURI(imageBase64, size).then(function (canvas, context) {
                         encoder.add(canvas, frames[index].delay);
 
-                        resolve(appendImagesToWebMFrame(encoder, zip, mimeType, frames, size, ++index));
+                        resolve(appendImagesToWebMFrame(encoder, zip, mimeType, frames, size, index + 1, -(-currentDuration - adapter.illustFrames[index].delay)));
                     });
                 });
             } else {
+                // Determine repeat
+                if (window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
+                    window.cr.storage.extendDuration && window.cr.storage.extendDuration * 1000 > currentDuration
+                ) {
+                    index = 0; // reset index
+                    resolve(appendImagesToWebMFrame(encoder, zip, mimeType, frames, size, index, -(-currentDuration - adapter.illustFrames[index].delay)));
+                }
+
                 resolve(encoder);
             }
         });
@@ -267,16 +278,16 @@
         window.location.href = url;
     }
 
-    function getUgoiraDownloadTitle(titleMetas, contextMetas, fallbackTitle) {
-        if (titleMetas === undefined || titleMetas.length == 0) {
+    function getUgoiraDownloadTitle(metasConfig, contextMetas, fallbackTitle) {
+        if (metasConfig === undefined || metasConfig.length == 0) {
             console.log('title: ' + fallbackTitle);
             return fallbackTitle;
         }
 
         let title = '';
-        titleMetas.forEach(function(key) {
-            if (common.metas[key] !== undefined) {
-                switch (key) {
+        metasConfig.forEach(function(meta) {
+            if (common.metas[meta.value] !== undefined && !!meta.enable === true) {
+                switch (meta.value) {
                     case 'id':
                         title += contextMetas.illustId + '_';
                         break;

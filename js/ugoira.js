@@ -9,16 +9,16 @@
     var zipData = null;
     var btnWrapper = null;
 
-    let getUgoiraDownloadTitle = function(titleMetas, fallbackTitle) {
-        if (titleMetas === undefined || titleMetas.length == 0) {
+    let getUgoiraDownloadTitle = function(metasConfig, fallbackTitle) {
+        if (metasConfig === undefined || metasConfig.length == 0) {
             console.log('title: ' + fallbackTitle);
             return fallbackTitle;
         }
 
         let title = '';
-        titleMetas.forEach(function(key) {
-            if (common.metas[key] !== undefined) {
-                title += pixivContext[common.metas[key].key] + '_';
+        metasConfig.forEach(function(meta) {
+            if (common.metas[meta.value] !== undefined && !!meta.value === true) {
+                title += pixivContext[common.metas[meta.value].key] + '_';
             }
         });
 
@@ -63,8 +63,8 @@
                             button.notice('#generate-gif-btn', chrome.i18n.getMessage('generate_gif_btn_complete_text'));
         
                             /* 读取命名设置 */
-                            chrome.storage.local.get('titleMetas', function(items) {
-                                button.addDownloadLink('#generate-gif-btn', URL.createObjectURL(blob), getUgoiraDownloadTitle(items.titleMetas, pixivContext.illustTitle));
+                            chrome.storage.local.get('metasConfig', function(items) {
+                                button.addDownloadLink('#generate-gif-btn', URL.createObjectURL(blob), getUgoiraDownloadTitle(items.metasConfig, pixivContext.illustTitle));
                             });
                         });
         
@@ -111,8 +111,8 @@
                 encoder.compile(false, function(output) {
                     button.notice('#generate-webm-btn', chrome.i18n.getMessage('generate_webm_btn_complete_text'));
 
-                    chrome.storage.local.get('titleMetas', function(items) {
-                        button.addDownloadLink('#generate-webm-btn', URL.createObjectURL(output), getUgoiraDownloadTitle(items.titleMetas, pixivContext.illustTitle) + '.webm');
+                    chrome.storage.local.get('metasConfig', function(items) {
+                        button.addDownloadLink('#generate-webm-btn', URL.createObjectURL(output), getUgoiraDownloadTitle(items.metasConfig, pixivContext.illustTitle) + '.webm');
                     });
                 });
             });
