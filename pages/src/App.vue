@@ -2,7 +2,7 @@
   <div id="app">
     <v-app>
       <v-toolbar class="v-primary" app absolute clipped-left height="56">
-        <span class="title v-primary">Settings</span>
+        <span class="title v-primary">{{ _i('settings') }}</span>
       </v-toolbar>
       <v-content>
         <router-view />
@@ -15,11 +15,17 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import cr from './modules/cr'
 
 Vue.use(Vuetify)
 
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+      _i (string) {
+          return cr._e(string);
+      }
+  }
 }
 </script>
 

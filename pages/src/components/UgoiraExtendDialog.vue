@@ -4,10 +4,8 @@
             <v-list two-line>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>
-                        Enable repeat when ugoira duration under {{ enableWhenUnderSeconds }} second(s)
-                        </v-list-tile-title>
-                        <v-list-tile-sub-title>Repeat disabled when 0 is selected</v-list-tile-sub-title>
+                        <v-list-tile-title>{{ _i('extend_duration_desc') }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ _i('enable_extend_desc') }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="secondsItems"
@@ -18,9 +16,7 @@
                 </v-list-tile>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>
-                            Extend ugoira duration to {{ extendDuration }} second(s) at least
-                        </v-list-tile-title>
+                        <v-list-tile-title>{{ _i('extend_duration_seconds_title') }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="extendDurationItems"
@@ -85,6 +81,10 @@ export default {
           }).then(() => {
               window.cr.storage.items.extendDuration = _this.extendDuration
           })
+      },
+      
+      _i (string) {
+        return cr._e(string);
       }
   }
 }

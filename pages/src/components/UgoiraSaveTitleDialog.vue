@@ -3,8 +3,8 @@
         <v-card>
             <v-card-title primary-title>
                 <div>
-                    <h2>Ugoira save title</h2>
-                    <div style="font-size: 12px">Drag to sort, click to enable/disable meta</div>
+                    <h2>{{ _i('saved_file_title') }}</h2>
+                    <div style="font-size: 12px">{{ _i('drag_click_metas') }}</div>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -35,20 +35,20 @@ export default {
       metas: [ 'id', 'title', 'author', 'author_id' ],
       metasConfig: [
           {
-              title: 'ID',
+              title: cr._e('id'),
               value: 'id',
               enable: false
           }, {
-              title: 'Title',
+              title: cr._e('title'),
               value: 'title',
               enable: false
           }, {
-              title: 'Author',
+              title: cr._e('author'),
               value: 'author',
               enable: false
           }, {
-              title: 'Author ID',
-              value: 'author_id',
+              title: cr._e('author_id'),
+              value: 'authorId',
               enable: false
           }
       ],
@@ -106,11 +106,15 @@ export default {
                   newMetasConfig.push(meta);
               });
 
-              cr._s.remove('metasConfig');
+              cr._s.remove('titleMetas'); // remove useless setting
               return newMetasConfig;
           } catch (e) {
               console.log(e);
           }
+      },
+      
+      _i (string) {
+        return cr._e(string);
       }
   }
 }
