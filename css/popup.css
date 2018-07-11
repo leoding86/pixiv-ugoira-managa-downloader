@@ -1,4 +1,4 @@
-html, body {width:310px;}
+html, body {width:255px;}
 
 /* 文本 */
 span#text-setting::before {content: '__MSG_setting__';}
@@ -9,6 +9,8 @@ span#text-setting::before {content: '__MSG_setting__';}
 #text-ugoira_best::before {content: '__MSG_ugoira_best__';}
 #text-ugoira_good::before {content: '__MSG_ugoira_good__';}
 #text-ugoira_normal::before {content: '__MSG_ugoira_normal__';}
+#text-open_settings::before {content: '__MSG_open_settings__';}
+#text-open_settings_intro::before {content: '__MSG_open_settings_intro__'}
 
 button.meta {display:block; margin-left:3px; float:left;}
 .panel-body {padding:10px;}
