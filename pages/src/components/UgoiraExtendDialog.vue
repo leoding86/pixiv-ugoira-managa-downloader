@@ -4,12 +4,21 @@
             <v-list two-line>
                 <v-list-tile>
                     <v-list-tile-content>
+                        <v-list-tile-title>{{ _i('extend_enable') }}</v-list-tile-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                        <v-switch v-model="enableExtend"></v-switch>
+                    </v-list-tile-action>
+                </v-list-tile>
+                <v-list-tile>
+                    <v-list-tile-content>
                         <v-list-tile-title>{{ _i('extend_duration_desc') }}</v-list-tile-title>
                         <v-list-tile-sub-title>{{ _i('enable_extend_desc') }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="secondsItems"
                                   v-model="enableWhenUnderSeconds"
+                                  :disabled="!enableExtend"
                                   @change="onEnableWhenUnderSecondsChangeHandler()"
                                   style="max-width: 100px"></v-select>
                     </v-list-tile-action>
@@ -21,6 +30,7 @@
                     <v-list-tile-action>
                         <v-select :items="extendDurationItems"
                                   v-model="extendDuration"
+                                  :disabled="!enableExtend"
                                   @change="onExtendDurationChangeHandler()"
                                   style="max-width: 100px"></v-select>
                     </v-list-tile-action>
@@ -39,29 +49,33 @@ export default {
     return {
       showDialog: true,
       secondsItems: [
-          '0', 1, 2, 3, 4, 5
+          1, 2, 3
       ],
       extendDurationItems: [
-          5, 10, 15
+          3, 4, 5
       ],
-      enableWhenUnderSeconds: 3,
-      extendDuration: 10
+      enableExtend: false,
+      enableWhenUnderSeconds: 1,
+      extendDuration: 3
     }
   },
   mounted () {
-      if (window.cr.storage.items.enableWhenUnderSeconds) {
-          this.enableWhenUnderSeconds = window.cr.storage.items.enableWhenUnderSeconds
-      }
-
-      if (window.cr.storage.items.extendDuration) {
-          this.extendDuration = window.cr.storage.items.extendDuration
-      }
+      this.enableWhenUnderSeconds = window.cr.storage.items.enableWhenUnderSeconds;
+      this.extendDuration = window.cr.storage.items.extendDuration;
+      this.enableExtend = window.cr.storage.items.enableExtend;
   },
   watch:  {
       showDialog: function (val) {
           if (!!val === false) {
               this.$router.go(-1)
           }
+      },
+      enableExtend: function (val) {
+          cr._s.set({
+              enableExtend: val
+          }).then(() => {
+              window.cr.storage.items.enableExtend = val;
+          });
       }
   },
   methods: {
