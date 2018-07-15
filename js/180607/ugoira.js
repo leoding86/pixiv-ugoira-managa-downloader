@@ -155,7 +155,8 @@
                 });
             } else {
                 // Determine repeat
-                if (window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
+                if (window.cr.storage.enableExtend === true &&
+                    window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
                     window.cr.storage.extendDuration && window.cr.storage.extendDuration * 1000 > currentDuration
                 ) {
                     index = 0; // reset index
@@ -211,7 +212,8 @@
                 });
             } else {
                 // Determine repeat
-                if (window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
+                if (window.cr.storage.enableExtend === true &&
+                    window.cr.storage.enableWhenUnderSeconds * 1000 > adapter.illustDuration &&
                     window.cr.storage.extendDuration && window.cr.storage.extendDuration * 1000 > currentDuration
                 ) {
                     index = 0; // reset index
