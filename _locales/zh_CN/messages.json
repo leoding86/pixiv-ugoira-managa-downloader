@@ -124,5 +124,8 @@
    },
    "drag_click_metas": {
        "message": "拖动排序，点击启用/禁用元数据"
+   },
+   "extend_enable": {
+       "message": "启用延长时长功能"
    }
 }
