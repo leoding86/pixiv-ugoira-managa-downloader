@@ -4,18 +4,22 @@
         generatingGif: false,
         generatingWebM: false,
     }
+    let buttonDefaultStyle = 'display:block;width:150px;margin-bottom:5px;background-color: #0096fa;border: none;border-radius: 16px;color: #fff;cursor: pointer;font-size: 12px;font-weight: 700;line-height: 1;padding: 10px 25px;text-align: center;transition: background-color .2s;cursor:pointer;';
+    let buttonInlineStyle = 'display:inline-block;margin-right:5px;background-color: #0096fa;border: none;border-radius: 16px;color: #fff;cursor: pointer;font-size: 12px;font-weight: 700;line-height: 1;padding: 10px 25px;text-align: center;transition: background-color .2s;cursor:pointer;'
 
     adapter.inital().then(function (context) {
         // ui staff
-        let buttonsWrapper = createButtonsWrapper();
-        let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'));
+        let targetElement = document.querySelector('article figcaption') || document.querySelector('article figure');
+        let buttonsWrapper = createButtonsWrapper(targetElement);
+        let buttonStyle = !!targetElement ? buttonInlineStyle : buttonDefaultStyle;
+        let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'), buttonStyle);
         downloadZipBtn.el.href = context.illustOriginalSrc;
         chrome.storage.local.get('metasConfig', function (items) {
             downloadZipBtn.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle);
         });
 
         downloadResources(context.illustOriginalSrc).then(function (zipData) {
-            let generateGifButton = new Button(buttonsWrapper, common.lan.msg('generate_gif_btn_text'));
+            let generateGifButton = new Button(buttonsWrapper, common.lan.msg('generate_gif_btn_text'), buttonStyle);
             generateGifButton.el.addEventListener('click', function () {
                 if (status.generatingGif) {
                     return;
@@ -37,7 +41,7 @@
                 });
             });
 
-            let generateWebmButton = new Button(buttonsWrapper, common.lan.msg('generate_webm_btn_text'));
+            let generateWebmButton = new Button(buttonsWrapper, common.lan.msg('generate_webm_btn_text'), buttonStyle);
             generateWebmButton.el.addEventListener('click', function () {
                 if (status.generatingWebM) {
                     return;
@@ -251,9 +255,9 @@
         image.src = src;
     }
 
-    function Button(wrapper, text) {
+    function Button(wrapper, text, style) {
         let button = document.createElement('a');
-        button.style = 'display:block;width:150px;margin-bottom:5px;background-color: #0096fa;border: none;border-radius: 16px;color: #fff;cursor: pointer;font-size: 12px;font-weight: 700;line-height: 1;padding: 10px 25px;text-align: center;transition: background-color .2s;cursor:pointer;';
+        button.style = !!style ? style : buttonDefaultStyle;
         button.innerText = text;
         wrapper.appendChild(button);
         this.el = button;
@@ -265,12 +269,22 @@
         }
     };
 
-    function createButtonsWrapper() {
+    function createButtonsWrapper(targetElement) {
         let wrapper = document.createElement('div');
-        wrapper.style.position = 'absolute';
-        wrapper.style.top = '120px';
-        wrapper.style.right = '10px';
-        document.body.appendChild(wrapper);
+
+        if (!!targetElement) {
+            wrapper.style.position = 'relative';
+            wrapper.style.width = '600px';
+            wrapper.style.margin = '16px auto';
+            targetElement.insertBefore(wrapper, targetElement.firstChild);
+        } else {
+            // fallback
+            wrapper.style.position = 'absolute';
+            wrapper.style.top = '120px';
+            wrapper.style.right = '10px';
+            document.body.appendChild(wrapper);
+        }
+        
         return wrapper;
     }
 
