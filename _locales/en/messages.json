@@ -124,5 +124,8 @@
    },
    "drag_click_metas": {
        "message": "Drag to sort, click to enable/disable meta"
+   },
+   "extend_enable": {
+       "message": "Turn on/off extend duration function"
    }
 }

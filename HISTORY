@@ -1,9 +1,17 @@
 Convert the ugoira on Pixiv to GIF or WebM file, and pack the images of manga to download without change page or open new tab.
+
 Notice:
-Only work with old pixiv site! (Because I can't visit the lastest version site)
+If you have trouble with old Pixiv site with version >=1.5 extension, plz goto my github page and download version 1.4.1 and disable the store version in Chrome extension page, then it should work.
+
+GitHub:
+https://github.com/leoding86/pixiv-ugoira-managa-downloader/releases
 ----------------------------------------------
-v1.6.1:
+v1.6.2:
 Reposition download/generate buttons.
+
+v1.6.1:
+Add a option to turn on/off extend gif duration function;
+Change default settings.
 
 v1.6:
 Add extend ugoira duration function (not avaliable for the old version pixiv for technical reseaon);
