@@ -1,4 +1,4 @@
-var version = '1.6.1';
+var version = '1.7';
 var scriptFiles = ['js/common.js', 'lib/jszip/jszip.js'];
 
 var badge = {}
@@ -112,19 +112,30 @@ function versionCompare(v1, v2, options) {
 }
 
 // Inital settings
-chrome.storage.local.get('version', function (items) {
-    console.log('version: ' + items.version);
+chrome.storage.local.get(null, function (items) {
+    console.log('boot up', items);
     if (items.version === undefined ||
         versionCompare(items.version, version) < 0
     ) {
-        console.log('set default settings');
-        var settings = {
+        var defaultSettings = {
             version: version,
             enableExtend: false,
             enableWhenUnderSeconds: 1,
-            extendDuration: 3
+            extendDuration: 3,
+            mangaImageNamePrefix: ''
         };
-        chrome.storage.local.set(settings, function () {
+
+        var settingsNeedRemoved = {}
+
+        Object.keys(defaultSettings).forEach(function (key) {
+            if (undefined === items[key]) {
+                items[key] = defaultSettings[key];
+            }
+        });
+
+        items.version = version; // update version
+
+        chrome.storage.local.set(items, function () {
             // Do nothing;
         });
     }
