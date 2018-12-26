@@ -127,5 +127,20 @@
    },
    "extend_enable": {
        "message": "Turn on/off extend duration function"
+   },
+   "saved_manga_file_title": {
+        "message": "Manga zip file saved title"
+   },
+   "saved_manga_file_title_desc": {
+        "message": "Change the saved manga zip file title when downloading manga"
+   },
+   "saved_manga_image_file_title": {
+       "message": "Manga images title prefix"
+   },
+   "saved_manga_image_file_title_desc": {
+       "message": "Change title prefix of the saved manga images"
+   },
+   "manga_image_name_prefix": {
+       "message": "Manga images page number prefix"
    }
 }

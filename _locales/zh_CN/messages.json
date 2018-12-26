@@ -127,5 +127,20 @@
    },
    "extend_enable": {
        "message": "启用延长时长功能"
+   },
+   "saved_manga_file_title": {
+        "message": "漫画压缩包的文件名"
+   },
+   "saved_manga_file_title_desc": {
+        "message": "修改下载的漫画压缩包文件名称"
+   },
+   "saved_manga_image_file_title": {
+       "message": "漫画图片文件名前缀"
+   },
+   "saved_manga_image_file_title_desc": {
+       "message": "修改漫画图片文件名的前缀"
+   },
+   "manga_image_name_prefix": {
+       "message": "漫画图片数字前缀"
    }
 }
