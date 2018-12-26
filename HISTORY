@@ -7,7 +7,8 @@ GitHub:
 https://github.com/leoding86/pixiv-ugoira-managa-downloader/releases
 ----------------------------------------------
 v1.7:
-Add manga rename settings.
+Add manga rename settings;
+Fix issue about missing file extension.
 
 v1.6.2:
 Reposition download/generate buttons.
