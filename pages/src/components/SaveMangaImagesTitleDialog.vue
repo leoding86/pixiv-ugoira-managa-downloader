@@ -54,21 +54,22 @@ export default {
       }
   },
   mounted () {
-      let self = this;
-
       // Filter invalid metas
-      if (window.cr.storage.items.mangaImagesMetasConfig) {
-        let metas = [];
+      if (!!window.cr.storage.items.mangaImagesMetasConfig) {
+        let metas = this.metasConfig;
 
-        window.cr.storage.items.mangaImagesMetasConfig.forEach((meta) => {
-          self.metasConfig.forEach((_meta) => {
-            if (meta.value == _meta.value) {
-              metas.push(meta);
-            }
-          })
+        metas.forEach((meta) => {
+            window.cr.stroage.items.mangaImagesMetasConfig.forEach((_meta) => {
+                if (meta.value == _meta.value) {
+                    meta.enable = _meta.enable;
+                }
+            });
         });
 
         this.metasConfig = metas;
+        console.log('s-m-i-t-d');
+      } else {
+          console.log('s-m-i-t-d-e');
       }
   },
   methods: {

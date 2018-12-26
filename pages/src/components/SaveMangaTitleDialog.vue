@@ -54,18 +54,16 @@ export default {
       }
   },
   mounted () {
-      let self = this;
-
       // Filter invalid metas
-      if (window.cr.storage.items.mangaMetasConfig) {
-        let metas = [];
+      if (!!window.cr.storage.items.mangaMetasConfig) {
+        let metas = this.metasConfig;
 
-        window.cr.storage.items.mangaMetasConfig.forEach((meta) => {
-          self.metasConfig.forEach((_meta) => {
-            if (meta.value == _meta.value) {
-              metas.push(meta);
-            }
-          })
+        metas.forEach((meta) => {
+            window.cr.stroage.items.mangaMetasConfig.forEach((_meta) => {
+                if (meta.value == _meta.value) {
+                    meta.enable = _meta.enable;
+                }
+            });
         });
 
         this.metasConfig = metas;
