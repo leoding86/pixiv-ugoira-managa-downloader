@@ -69,8 +69,6 @@ export default {
         });
 
         this.metasConfig = metas;
-      } else {
-        this.metasConfig = window.cr.storage.items.mangaMetasConfig;
       }
   },
   methods: {
