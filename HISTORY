@@ -6,6 +6,9 @@ If you have trouble with old Pixiv site with version >=1.5 extension, plz goto m
 GitHub:
 https://github.com/leoding86/pixiv-ugoira-managa-downloader/releases
 ----------------------------------------------
+v1.7.1:
+Fix manga rename settings display issue.
+
 v1.7:
 Add manga rename settings;
 Fix issue about missing file extension.
