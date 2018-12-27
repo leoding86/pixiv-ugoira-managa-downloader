@@ -59,7 +59,7 @@ export default {
         let metas = this.metasConfig;
 
         metas.forEach((meta) => {
-            window.cr.stroage.items.mangaMetasConfig.forEach((_meta) => {
+            window.cr.storage.items.mangaMetasConfig.forEach((_meta) => {
                 if (meta.value == _meta.value) {
                     meta.enable = _meta.enable;
                 }
