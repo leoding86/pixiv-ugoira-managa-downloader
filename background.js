@@ -1,4 +1,3 @@
-var version = '1.7';
 var scriptFiles = ['js/common.js', 'lib/jszip/jszip.js'];
 
 var badge = {}
@@ -111,32 +110,54 @@ function versionCompare(v1, v2, options) {
     return 0;
 }
 
-// Inital settings
-chrome.storage.local.get(null, function (items) {
-    console.log('boot up', items);
-    if (items.version === undefined ||
-        versionCompare(items.version, version) < 0
-    ) {
-        var defaultSettings = {
-            version: version,
-            enableExtend: false,
-            enableWhenUnderSeconds: 1,
-            extendDuration: 3,
-            mangaImageNamePrefix: ''
-        };
-
-        var settingsNeedRemoved = {}
-
-        Object.keys(defaultSettings).forEach(function (key) {
-            if (undefined === items[key]) {
-                items[key] = defaultSettings[key];
-            }
+function readPackageFile(path, callback) {
+    chrome.runtime.getPackageDirectoryEntry(function (directoryEntry) {
+        directoryEntry.getFile(path, undefined, function (fileEntry) {
+            fileEntry.file(function (file) {
+                var reader = new FileReader;
+                reader.addEventListener("load", function (event) {
+                    callback(reader.result);
+                });
+                reader.readAsText(file);
+            });
         });
+    });
+}
 
-        items.version = version; // update version
+console.log('start boot')
+readPackageFile('manifest.json', function (result) {
+    var manifest = JSON.parse(result);
+    var version = manifest.version;
 
-        chrome.storage.local.set(items, function () {
-            // Do nothing;
-        });
-    }
+    // Inital settings
+    chrome.storage.local.get(null, function (items) {
+        console.log('version check');
+        if (items.version === undefined ||
+            versionCompare(items.version, version) < 0
+        ) {
+            var defaultSettings = {
+                version: version,
+                enableExtend: false,
+                enableWhenUnderSeconds: 1,
+                extendDuration: 3,
+                mangaImageNamePrefix: ''
+            };
+    
+            var settingsNeedRemoved = {}
+    
+            Object.keys(defaultSettings).forEach(function (key) {
+                if (undefined === items[key]) {
+                    items[key] = defaultSettings[key];
+                }
+            });
+    
+            items.version = version; // update version
+    
+            chrome.storage.local.set(items, function () {
+                // Do nothing;
+            });
+        }
+
+        console.log('booted');
+    });
 });
