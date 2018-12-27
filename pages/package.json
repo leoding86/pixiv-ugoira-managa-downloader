@@ -5,8 +5,7 @@
   "author": "leoding86 <leoding86@msn.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
+    "dev": "webpack --watch --progress --config build/webpack.dev.conf.js",
     "build": "node build/build.js",
     "buildw": "webpack --config build/webpack.prod.conf.js --watch --progress"
   },
