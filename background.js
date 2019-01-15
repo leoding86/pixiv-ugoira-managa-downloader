@@ -23,9 +23,10 @@ badge.render = function() {
 
 chrome.webRequest.onCompleted.addListener(function (details) {
     if (details.method == 'HEAD' && details.statusCode == 200) {
-        for (var i in scriptFiles) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
-        }
+        scriptFiles.forEach(function(scriptFile) {
+            chrome.tabs.executeScript(details.tabId, {file: scriptFile});
+        })
+
         chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
         chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
         chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load elder ugoira
@@ -40,10 +41,13 @@ chrome.webRequest.onCompleted.addListener(function (details) {
 
 chrome.webRequest.onCompleted.addListener(function(details) {
     if (details.frameId == 0) {
-        for (var i in scriptFiles) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
-        }
-        chrome.tabs.executeScript(details.tabId, {file: 'js/manga.js'});
+        scriptFiles.forEach(function(scriptFile) {
+            chrome.tabs.executeScript(details.tabId, {file: scriptFile});
+        })
+
+        setTimeout(function() {
+            chrome.tabs.executeScript(details.tabId, {file: 'js/manga.js'}); 
+        }, 100);
     }
 }, {urls: ["*://*.pixiv.net/member_illust.php?mode=manga&illust_id=*"]});
 
@@ -51,9 +55,9 @@ chrome.webRequest.onCompleted.addListener(function(details) {
     if (details.frameId === 0) {
         console.log('Load noval app');
 
-        for (var i in scriptFiles) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
-        }
+        scriptFiles.forEach(function(scriptFile) {
+            chrome.tabs.executeScript(details.tabId, {file: scriptFile});
+        })
 
         chrome.tabs.executeScript(details.tabId, {file: 'lib/js-epub-maker/js-epub-maker.min.js'});
         chrome.tabs.executeScript(details.tabId, {file: 'js/NovalAdapter.js'});
@@ -156,7 +160,6 @@ readPackageFile('manifest.json', function (result) {
                 enableExtend: false,
                 enableWhenUnderSeconds: 1,
                 extendDuration: 3,
-                mangaImageNamePrefix: '',
 
                 ugoiraRenameFormat: '',
                 mangaRenameFormat: '',
@@ -173,6 +176,81 @@ readPackageFile('manifest.json', function (result) {
                 'mangaImagesMetasConfig'
             ];
 
+            /**
+             * Update settings
+             */
+            if (items.mangaMetasConfig) {
+                items.mangaRenameFormat = '';
+
+                items.mangaMetasConfig.forEach(function(meta) {
+                    if (!!meta.enable) {
+                        switch (meta.value) {
+                            case 'id':
+                            case 'authorId':
+                                items.mangaRenameFormat += '_{' + meta.value + '}';
+                        }
+                    }
+                });
+
+                if (items.mangaRenameFormat.indexOf('_') === 0) {
+                    items.mangaRenameFormat = items.mangaRenameFormat.slice(1);
+                }
+            }
+
+            if (items.mangaImagesMetasConfig) {
+                items.mangaImageRenameFormat = '';
+
+                items.mangaImageRenameFormat.forEach(function(meta) {
+                    if (!!meta.enable) {
+                        switch (meta.value) {
+                            case 'id':
+                            case 'authorId':
+                            items.mangaImageRenameFormat += '_{' + meta.value + '}';
+                        }
+                    }
+                });
+
+                if (items.mangaImageRenameFormat.indexOf('_') === 0) {
+                    items.mangaImageRenameFormat = items.mangaImageRenameFormat.slice(1);
+                }
+
+                if (items.mangaImageNamePrefix) {
+                    items.mangaImageRenameFormat = items.mangaImageNamePrefix + items.mangaImageRenameFormat;
+                }
+            }
+
+            if (items.metasConfig) {
+                items.ugoiraRenameFormat = '';
+                
+                items.metasConfig.forEach(function(meta) {
+                    if (!!meta.enable) {
+                        switch (meta.value) {
+                            case 'id':
+                            case 'authorId':
+                            case 'title':
+                            case 'author':
+                                items.ugoiraRenameFormat += '_{' + meta.value + '}';
+                        }
+                    }
+                });
+
+                if (items.ugoiraRenameFormat.indexOf('_') === 0) {
+                    items.ugoiraRenameFormat = items.ugoiraRenameFormat.slice(1);
+                }
+            }
+
+            /**
+             * Update settings end ^^^
+             */
+
+            /**
+             * Remove useless settings
+             */
+            chrome.storage.local.remove(settingsNeedRemoved);
+
+            /**
+             * Merge settings
+             */
             Object.keys(defaultSettings).forEach(function (key) {
                 if (undefined === items[key]) {
                     items[key] = defaultSettings[key];
@@ -184,6 +262,8 @@ readPackageFile('manifest.json', function (result) {
             chrome.storage.local.set(items, function () {
                 // Do nothing;
             });
+
+            console.log('updated');
         }
 
         console.log('booted');
