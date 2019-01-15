@@ -35,7 +35,8 @@
                     finished: function (url) {
                         generateGifButton.updateText(common.lan.msg('generate_gif_btn_complete_text'));
                         chrome.storage.local.get('metasConfig', function(items) {
-                            generateGifButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.gif';
+                            // generateGifButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.gif';
+                            generateGifButton.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.gif';
                             generateGifButton.el.href = url;
                         });
                     }
@@ -57,7 +58,8 @@
                     finished: function (url) {
                         generateWebmButton.updateText(common.lan.msg('generate_webm_btn_complete_text'));
                         chrome.storage.local.get('metasConfig', function(items) {
-                            generateWebmButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.webm';
+                            // generateWebmButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.webm';
+                            generateWebmButton.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.webm';
                             generateWebmButton.el.href = url;
                         });
                     }

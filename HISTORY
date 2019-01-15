@@ -1,11 +1,15 @@
 Convert the ugoira on Pixiv to GIF or WebM file, and pack the images of manga to download without change page or open new tab.
 
 Notice:
-If you have trouble with old Pixiv site with version >=1.5 extension, plz goto my github page and download version 1.4.1 and disable the store version in Chrome extension page, then it should work.
+If you are using version < 1.5, plz update it asap.
 
 GitHub:
-https://github.com/leoding86/pixiv-ugoira-managa-downloader/releases
+https://github.com/leoding86/pixiv-ugoira-managa-downloader
 ----------------------------------------------
+v1.8
+Refactor rename feature for easy use;
+Fix issue about missing buttons sometimes.
+
 v1.7.1:
 Fix manga rename settings display issue.
 

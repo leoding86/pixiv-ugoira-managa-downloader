@@ -73,7 +73,8 @@ _pumd.common = (function () {
         id       : {content : common.lan.msg('id'), key : 'illustId', possibleKeys: ['illustId']},
         title    : {content : common.lan.msg('title'), key : 'illustTitle', possibleKeys: ['illustTitle']},
         author   : {content : common.lan.msg('author'), key : 'userName', possibleKeys: ['userName', 'illustAuthor']},
-        authorId : {content : common.lan.msg('author_id'), key : 'userId', possibleKeys: ['userId', 'illustAuthorId']}
+        authorId : {content : common.lan.msg('author_id'), key : 'userId', possibleKeys: ['userId', 'illustAuthorId']},
+        pageNum  : {content : common.lan.msg('page_num'), key: 'pageNum', possibleKeys: ['pageNum']}
     }
 
     common.getContextMetaValue = function(context, meta) {
