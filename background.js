@@ -47,6 +47,22 @@ chrome.webRequest.onCompleted.addListener(function(details) {
     }
 }, {urls: ["*://*.pixiv.net/member_illust.php?mode=manga&illust_id=*"]});
 
+chrome.webRequest.onCompleted.addListener(function(details) {
+    if (details.frameId === 0) {
+        console.log('Load noval app');
+
+        for (var i in scriptFiles) {
+            chrome.tabs.executeScript(details.tabId, {file: scriptFiles[i]});
+        }
+
+        chrome.tabs.executeScript(details.tabId, {file: 'lib/js-epub-maker/js-epub-maker.min.js'});
+        chrome.tabs.executeScript(details.tabId, {file: 'js/NovalAdapter.js'});
+        chrome.tabs.executeScript(details.tabId, {file: 'js/190115/Noval.js'});
+    }
+}, {
+    urls: ["*://*.pixiv.net/novel/show.php?id=*"]
+});
+
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
     var string = null;
     if (message.from == 'pixivContentScript' && message.to == 'background') {
@@ -140,19 +156,31 @@ readPackageFile('manifest.json', function (result) {
                 enableExtend: false,
                 enableWhenUnderSeconds: 1,
                 extendDuration: 3,
-                mangaImageNamePrefix: ''
+                mangaImageNamePrefix: '',
+
+                ugoiraRenameFormat: '',
+                mangaRenameFormat: '',
+                mangaImageRenameFormat: ''
             };
-    
-            var settingsNeedRemoved = {}
-    
+
+            /**
+             * setting key need to be removed after settings updated
+             */
+            var settingsNeedRemoved = [
+                'metasConfig',
+                'mangaMetasConfig',
+                'mangaImageNamePrefix',
+                'mangaImagesMetasConfig'
+            ];
+
             Object.keys(defaultSettings).forEach(function (key) {
                 if (undefined === items[key]) {
                     items[key] = defaultSettings[key];
                 }
             });
-    
+
             items.version = version; // update version
-    
+
             chrome.storage.local.set(items, function () {
                 // Do nothing;
             });
