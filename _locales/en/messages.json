@@ -27,7 +27,7 @@
       "message": "Metas can use (Drag to select)"
    },
    "extDescription": {
-      "message": "Convert the ugoira on Pixiv to GIF file, and pack the images of manga to download."
+      "message": "Convert the ugoira on Pixiv to GIF or WebM file, and pack the images of manga for downloading."
    },
    "extName": {
       "message": "Pixiv ugoira & manga downloader"
@@ -142,5 +142,8 @@
    },
    "manga_image_name_prefix": {
        "message": "Manga images page number prefix"
+   },
+   "page_num": {
+      "message": "Page No."
    }
 }
