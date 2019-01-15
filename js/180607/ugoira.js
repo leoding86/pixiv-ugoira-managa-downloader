@@ -15,7 +15,6 @@
         let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'), buttonStyle);
         downloadZipBtn.el.href = context.illustOriginalSrc;
         chrome.storage.local.get('ugoiraRenameFormat', function (items) {
-            // downloadZipBtn.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.zip';
             downloadZipBtn.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.zip';
         });
 
@@ -34,8 +33,7 @@
                     },
                     finished: function (url) {
                         generateGifButton.updateText(common.lan.msg('generate_gif_btn_complete_text'));
-                        chrome.storage.local.get('metasConfig', function(items) {
-                            // generateGifButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.gif';
+                        chrome.storage.local.get(null, function(items) {
                             generateGifButton.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.gif';
                             generateGifButton.el.href = url;
                         });
@@ -57,8 +55,7 @@
                     },
                     finished: function (url) {
                         generateWebmButton.updateText(common.lan.msg('generate_webm_btn_complete_text'));
-                        chrome.storage.local.get('metasConfig', function(items) {
-                            // generateWebmButton.el.download = getUgoiraDownloadTitle(items.metasConfig, context, context.illustId + '_' + context.illustTitle) + '.webm';
+                        chrome.storage.local.get('ugoiraRenameFormat', function(items) {
                             generateWebmButton.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.webm';
                             generateWebmButton.el.href = url;
                         });
