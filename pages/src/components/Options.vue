@@ -184,7 +184,7 @@ export default {
             this.$router.push({
                 name: 'RenameMangaImage',
                 params: {
-                    renameMangaImage: this.mangaImageRenameFormat
+                    renameFormat: this.mangaImageRenameFormat
                 }
             });
         },

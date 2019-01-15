@@ -1,6 +1,10 @@
 (function(common, button, RetryTicker) {
     // Load extension config 
     common.storage.get(null, function(extensionItems) {
+        if (extensionItems.mangaImageRenameFormat.indexOf('{pageNum}') < 0) {
+            extensionItems.mangaImageRenameFormat += '{pageNum}';
+        }
+
         function createDownloadButtonWrapper($buttons) {
             let $wrapper = document.createElement('div');
             $wrapper.className = common.classname('download-btns-wrapper');
@@ -77,15 +81,23 @@
          */
         function saveImage(url, zip) {
             let _this = this;
-            let fileNamePrefix = getTitle(extensionItems.mangaImagesMetasConfig, pixivContext, '');
+            // let fileNamePrefix = getTitle(extensionItems.mangaImagesMetasConfig, pixivContext, '');
             return new Promise(function (resolve, reject) {
                 let ixhr = new XMLHttpRequest();
                 ixhr.overrideMimeType('text/plain; charset=x-user-defined');
                 ixhr.open('get', url);
                 ixhr.onload = function () {
-                    let fileName = fileNamePrefix + (!!fileNamePrefix ? '_' : '') +
-                        (extensionItems.mangaImageNamePrefix) +
-                        (this.responseURL.match(/\d+\.[^.]+$/))[0];
+                    // let fileName = fileNamePrefix + (!!fileNamePrefix ? '_' : '') +
+                    //     (extensionItems.mangaImageNamePrefix) +
+                    //     (this.responseURL.match(/\d+\.[^.]+$/))[0];
+                    var pageNum = this.responseURL.match(/\d+\.[^.]+$/)[0];
+                    pixivContext.pageNum = pageNum;
+
+                    let fileName = common.formatName(
+                        extensionItems.mangaImageRenameFormat,
+                        pixivContext,
+                        pageNum
+                    );
                     zip.file(fileName, this.responseText, {binary: true});
                     resolve();
                 };
@@ -185,8 +197,10 @@
             let startPage = parseInt(chunk.start) + 1,
                 endPage = parseInt(chunk.end) + 1,
                 // fileName = pixivContext.illustId + '_' + startPage + '-' + endPage + '.zip';
-                fileName = getTitle(extensionItems.mangaMetasConfig, pixivContext, pixivContext.illustId) +
-                    '_' + startPage + '-' + endPage + '.zip';
+                // fileName = getTitle(extensionItems.mangaMetasConfig, pixivContext, pixivContext.illustId) +
+                //     '_' + startPage + '-' + endPage + '.zip';
+                fileName = common.formatName(extensionItems.mangaRenameFormat, pixivContext, pixivContext.illustId)
+                    + '_' + startPage + '-' + endPage + '.zip';
     
             $downloadBtn = button.addBtn(common.lan.msg('downloadPage') + ' ' + startPage + '-' + endPage, common.classname("download-btn_" + startPage + '-' + endPage), $wrapper);
             $downloadBtn.style = "display:block;padding:8px;background:#fff;border-bottom:1px solid #eee";
