@@ -2,7 +2,7 @@
   <div id="app">
     <v-app>
       <v-toolbar class="v-primary" app absolute clipped-left height="56">
-        <span class="title v-primary">{{ _i('settings') }}</span>
+        <span class="title v-primary">{{ lt('settings') }}</span>
       </v-toolbar>
       <v-content>
         <router-view />
@@ -22,7 +22,7 @@ Vue.use(Vuetify)
 export default {
   name: 'App',
   methods: {
-      _i (string) {
+      lt (string) {
           return cr._e(string);
       }
   }
