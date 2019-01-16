@@ -21,17 +21,42 @@ badge.render = function() {
     chrome.browserAction.setBadgeBackgroundColor({color: this.bgColor, tabId: this.tabId});
 };
 
+var injectScripts = function(tabId, injectDetails, i) {
+    var i = i === undefined ? 0 : i;
+    var injectDetail = injectDetails[i];
+
+    if (injectDetail) {
+        chrome.tabs.executeScript(tabId, injectDetail, function() {
+            injectScripts(tabId, injectDetails, ++i);
+        });
+    }
+}
+
 chrome.webRequest.onCompleted.addListener(function (details) {
     if (details.method == 'HEAD' && details.statusCode == 200) {
-        scriptFiles.forEach(function(scriptFile) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFile});
-        })
+        var injectDetails = [];
 
-        chrome.tabs.executeScript(details.tabId, {file: 'lib/gifjs/gif.js'}); // Load gif.js lib
-        chrome.tabs.executeScript(details.tabId, {file: 'lib/whammy.js'}); // Load whammy lib
-        chrome.tabs.executeScript(details.tabId, {file: 'js/ugoira.js'}); // Load elder ugoira
-        chrome.tabs.executeScript(details.tabId, {file: 'js/UgoiraAdapter.js'}) // Ugoria adapter
-        chrome.tabs.executeScript(details.tabId, {file: 'js/180607/ugoira.js'}); // new version ugoria js
+        scriptFiles.forEach(function(file) {
+            injectDetails.push({
+                file: file
+            });
+        });
+
+        [
+            'lib/gifjs/gif.js',
+            'lib/whammy.js',
+            'js/ugoira.js',
+            'js/UgoiraAdapter.js',
+            'js/180607/ugoira.js'
+        ].forEach(function(file) {
+            injectDetails.push({
+                file: file
+            });
+        });
+
+        setTimeout(function() {
+            injectScripts(details.tabId, injectDetails);
+        }, 300);
     }
 }, {
     urls: [
@@ -40,14 +65,22 @@ chrome.webRequest.onCompleted.addListener(function (details) {
 });
 
 chrome.webRequest.onCompleted.addListener(function(details) {
-    if (details.frameId == 0) {
-        scriptFiles.forEach(function(scriptFile) {
-            chrome.tabs.executeScript(details.tabId, {file: scriptFile});
-        })
+    if (details.frameId === 0 && details.statusCode === 200) {
+        var injectDetails = [];
+
+        scriptFiles.forEach(function(file) {
+            injectDetails.push({
+                file: file
+            });
+        });
+
+        injectDetails.push({
+            file: 'js/manga.js'
+        });
 
         setTimeout(function() {
-            chrome.tabs.executeScript(details.tabId, {file: 'js/manga.js'}); 
-        }, 100);
+            injectScripts(details.tabId, injectDetails);
+        }, 300);
     }
 }, {urls: ["*://*.pixiv.net/member_illust.php?mode=manga&illust_id=*"]});
 
@@ -221,7 +254,7 @@ readPackageFile('manifest.json', function (result) {
 
             if (items.metasConfig) {
                 items.ugoiraRenameFormat = '';
-                
+
                 items.metasConfig.forEach(function(meta) {
                     if (!!meta.enable) {
                         switch (meta.value) {
