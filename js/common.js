@@ -6,22 +6,22 @@ _pumd.common = (function () {
         storage : {},
         lan     : {}
     };
-    
+
     common.storage.set = function(value, callback) {
         callback = typeof callback == 'function' ? callback : function() {}
         chrome.storage.local.set(value, callback);
     };
-    
+
     common.storage.get = function(key, callback) {
         callback = typeof callback == 'function' ? callback : function() {}
         chrome.storage.local.get(key, callback);
     };
-    
+
     common.storage.clear = function(callback) {
         callback = typeof callback == 'function' ? callback : function() {}
         chrome.storage.local.clear(callback);
     };
-    
+
     // 生成指定长度的随机字符串
     common.getRandomStr = function(len) {
         var text = "";
@@ -52,11 +52,11 @@ _pumd.common = (function () {
         injectScript[(injectScript.innerText === undefined ? 'textContent' : 'innerText')] = script;
         document.documentElement.appendChild(injectScript);
         var domData = document.querySelector('#dom-' + randomStr).getAttribute('data');
-    
+
         // clearup
         document.querySelector('#dom-' + randomStr).remove();
         document.querySelector('#js-' + randomStr).remove();
-    
+
         if (type === 'string')
             return domData;
         else if (type === 'object' || type === 'json')
@@ -64,17 +64,36 @@ _pumd.common = (function () {
         else
             return null;
     }
-    
+
     common.lan.msg = function(name) {
         return chrome.i18n.getMessage(name);
     }
-    
+
     common.metas = {
-        id       : {content : common.lan.msg('id'), key : 'illustId'},
-        title    : {content : common.lan.msg('title'), key : 'illustTitle'},
-        author   : {content : common.lan.msg('author'), key : 'userName'},
-        authorId : {content : common.lan.msg('author_id'), key : 'userId'}
+        id       : {content : common.lan.msg('id'), key : 'illustId', possibleKeys: ['illustId']},
+        title    : {content : common.lan.msg('title'), key : 'illustTitle', possibleKeys: ['illustTitle']},
+        author   : {content : common.lan.msg('author'), key : 'userName', possibleKeys: ['userName', 'illustAuthor']},
+        authorId : {content : common.lan.msg('author_id'), key : 'userId', possibleKeys: ['userId', 'illustAuthorId']},
+        pageNum  : {content : common.lan.msg('page_num'), key: 'pageNum', possibleKeys: ['pageNum']}
     }
+
+    common.getContextMetaValue = function(context, meta) {
+        var meta = common.metas[meta];
+
+        if (!meta) {
+            return;
+        }
+
+        var keys = meta.possibleKeys;
+
+        for (var i = 0, l = keys.length; i < l; i++) {
+            if (context[keys[i]] !== undefined) {
+                return context[keys[i]];
+            }
+        }
+
+        return;
+    },
 
     common.classname = function(classname) {
         return '_pumd_' + classname;
@@ -84,16 +103,40 @@ _pumd.common = (function () {
         return obj[Object.keys(obj)[0]];
     }
 
+    common.formatName = function(renameFormat, context, fallback) {
+        if (!renameFormat) {
+            return fallback;
+        }
+
+        var matches = renameFormat.match(/\{[a-z]+\}/ig);
+        var name = renameFormat;
+
+        if (matches && matches.length > 0) {
+            matches.filter(function(item, pos) {
+                return matches.indexOf(item) == pos;
+            }).forEach(function (match) {
+                var key = match.slice(1, -1);
+                var val = common.getContextMetaValue(context, key);
+
+                if (val !== undefined) {
+                    name = name.replace(match, val);
+                }
+            });
+        }
+
+        return !!name ? name : fallback;
+    }
+
     return common;
 })();
 
 _pumd.button = (function() {
     var button = {};
-    
+
     button.getBtn = function(selector) {
         return document.querySelector(selector);
     }
-    
+
     button.addBtn = function(string, id, to) {
         var btn = document.createElement('a');
         btn.href = 'javascript:void(0)';
@@ -101,7 +144,7 @@ _pumd.button = (function() {
             btn.setAttribute('id', id);
         }
         btn.innerText = string;
-    
+
         if (to !== undefined) {
             if (typeof to == 'string') {
                 document.querySelector(to).appendChild(btn);
@@ -118,11 +161,11 @@ _pumd.button = (function() {
         }
         return btn;
     }
-    
+
     button.notice = function(selector, string) {
         document.querySelector(selector).innerText = string;
     }
-    
+
     button.addDownloadLink = function(selector, url, string) {
         var btn = document.querySelector(selector)
         btn.href = url;

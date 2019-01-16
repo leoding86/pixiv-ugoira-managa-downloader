@@ -3,10 +3,10 @@
         <span class="card-title">Ugoira</span>
         <v-card>
             <v-list two-line>
-                <v-list-tile @click="showUgoiraSaveDialog()">
+                <v-list-tile @click="showRenameUgoiraDialog()">
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('saved_file_title') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('saved_file_title_desc') }}</v-list-tile-sub-title>
+                        <v-list-tile-title>Rename ugoira file</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ ugoiraRenameFormatPreview }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-btn icon ripple>
@@ -16,7 +16,7 @@
                 </v-list-tile>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('quanlity') }}</v-list-tile-title>
+                        <v-list-tile-title>{{ tl('quanlity') }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="quanlityItems"
@@ -26,8 +26,8 @@
                 </v-list-tile>
                 <v-list-tile @click="showUgoiraExtendDialog()">
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('extend_duration') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('extend_duration_desc') }}</v-list-tile-sub-title>
+                        <v-list-tile-title>{{ tl('extend_duration') }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ tl('extend_duration_desc') }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-btn icon ripple>
@@ -40,10 +40,10 @@
         <span class="card-title">Manga</span>
         <v-card>
             <v-list two-line>
-                <v-list-tile @click="showSaveMangaTitleDialog()">
+                <v-list-tile @click="showRenameMangaDialog()">
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('saved_manga_file_title') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('saved_manga_file_title_desc') }}</v-list-tile-sub-title>
+                        <v-list-tile-title>Rename manga file</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ mangaRenameFormatPreview }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-btn icon ripple>
@@ -51,24 +51,15 @@
                         </v-btn>
                     </v-list-tile-action>
                 </v-list-tile>
-                <v-list-tile @click="showSaveMangaImagesTitleDialog()">
+                <v-list-tile @click="showRenameMangaImageDialog()">
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('saved_manga_image_file_title') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('saved_manga_image_file_title_desc') }}</v-list-tile-sub-title>
+                        <v-list-tile-title>Rename manga image file</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ mangaImageRenameFormatPreview }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-btn icon ripple>
                             <v-icon>keyboard_arrow_right</v-icon>
                         </v-btn>
-                    </v-list-tile-action>
-                </v-list-tile>
-                <v-list-tile>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('manga_image_name_prefix') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('manga_image_full_name_intro') }}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                        <v-text-field v-model="mangaImageNamePrefix"></v-text-field>
                     </v-list-tile-action>
                 </v-list-tile>
             </v-list>
@@ -78,10 +69,12 @@
 </template>
 
 <script>
+import '@/assets/global.scss'
 import cr from '@/modules/cr'
 
 export default {
     name: 'Options',
+
     data () {
         return {
             quanlityItems: [
@@ -97,22 +90,71 @@ export default {
                 }
             ],
             ugoiraQuanlity: 10,
-
-            mangaImageNamePrefix: '',
+            ugoiraRenameFormat: '',
+            mangaRenameFormat: '',
+            mangaImageRenameFormat: ''
         }
     },
+
     mounted () {
-        this.ugoiraQuanlity = window.cr.storage.items.ugoiraQuanlity ? window.cr.storage.items.ugoiraQuanlity : this.ugoiraQuanlity - 0;
-        this.mangaImageNamePrefix = window.cr.storage.items.mangaImageNamePrefix ? window.cr.storage.items.mangaImageNamePrefix : '';
+        var self = this;
+
+        cr._s.get(null).then(function(items) {
+            self.ugoiraQuanlity = items.ugoiraQuanlity ? items.ugoiraQuanlity : self.ugoiraQuanlity;
+            self.ugoiraRenameFormat = items.ugoiraRenameFormat ? items.ugoiraRenameFormat : '';
+            self.mangaRenameFormat = items.mangaRenameFormat ? items.mangaRenameFormat : '';
+            self.mangaImageRenameFormat = items.mangaImageRenameFormat ? items.mangaImageRenameFormat : '';
+        });
+    },
+
+    beforeRouteUpdate (to, from, next) {
+        var self = this;
+
+        if (from.name === 'RenameManga') {
+            cr._s.get('mangaRenameFormat').then((items) => {
+                self.mangaRenameFormat = items.mangaRenameFormat;
+            });
+        } else if (from.name === 'RenameMangaImage') {
+            cr._s.get('mangaImageRenameFormat').then((items) => {
+                self.mangaImageRenameFormat = items.mangaImageRenameFormat;
+            });
+        } else if (from.name === 'RenameUgoira') {
+            cr._s.get('ugoiraRenameFormat').then((items) => {
+                self.ugoiraRenameFormat = items.ugoiraRenameFormat
+            });
+        }
+
+        next();
+    },
+
+    computed: {
+        ugoiraRenameFormatPreview () {
+            if (!!this.ugoiraRenameFormat) {
+                return this.ugoiraRenameFormat;
+            } else {
+                return 'Not set';
+            }
+        },
+
+        mangaRenameFormatPreview () {
+            if (!!this.mangaRenameFormat) {
+                return this.mangaRenameFormat;
+            } else {
+                return 'Not set';
+            }
+        },
+
+        mangaImageRenameFormatPreview() {
+            if (!!this.mangaImageRenameFormat) {
+                return this.mangaImageRenameFormat;
+            } else {
+                return 'Not set';
+            }
+        }
     },
 
     watch: {
-        mangaImageNamePrefix (value) {
-            console.log(value);
-            cr._s.set({
-                'mangaImageNamePrefix': value
-            });
-        }
+        //
     },
 
     methods: {
@@ -120,8 +162,31 @@ export default {
             console.log(1);
         },
 
-        showUgoiraSaveDialog: function (evt) {
-            this.$router.push('ugoira-save-title')
+        showRenameUgoiraDialog: function (evt) {
+            this.$router.push({
+                name: 'RenameUgoira',
+                params: {
+                    renameFormat: this.ugoiraRenameFormat
+                }
+            })
+        },
+
+        showRenameMangaDialog: function (evt) {
+            this.$router.push({
+                name: 'RenameManga',
+                params: {
+                    renameFormat: this.mangaRenameFormat
+                }
+            });
+        },
+
+        showRenameMangaImageDialog: function (evt) {
+            this.$router.push({
+                name: 'RenameMangaImage',
+                params: {
+                    renameFormat: this.mangaImageRenameFormat
+                }
+            });
         },
 
         showUgoiraExtendDialog: function (evt) {
@@ -133,15 +198,7 @@ export default {
             cr._s.set({ 'ugoiraQuanlity': _this.ugoiraQuanlity } )
         },
 
-        showSaveMangaTitleDialog: function() {
-            this.$router.push('save-manga-title');
-        },
-
-        showSaveMangaImagesTitleDialog: function() {
-            this.$router.push('save-manga-images-title');
-        },
-
-        _i (string) {
+        tl (string) {
             return cr._e(string);
         }
     }

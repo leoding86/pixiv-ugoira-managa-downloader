@@ -5,6 +5,9 @@ import UgoriaSaveTitleDialog from '@/components/UgoiraSaveTitleDialog'
 import UgoriaExtendDialog from '@/components/UgoiraExtendDialog'
 import SaveMangaTitleDialog from '@/components/SaveMangaTitleDialog'
 import SaveMangaImagesTitleDialog from '@/components/SaveMangaImagesTitleDialog'
+import RenameUgoiraDialog from '@/components/RenameUgoiraDialog';
+import RenameMangaDialog from '@/components/RenameMangaDialog';
+import RenameMangaImageDialog from '@/components/RenameMangaImageDialog';
 
 Vue.use(Router)
 
@@ -31,6 +34,18 @@ export default new Router({
               path: 'save-manga-images-title',
               name: 'SaveMangaImagesTitle',
               component: SaveMangaImagesTitleDialog,
+          }, {
+              path: 'rename-ugoira',
+              name: 'RenameUgoira',
+              component: RenameUgoiraDialog
+          }, {
+              path: 'rename-manga',
+              name: 'RenameManga',
+              component: RenameMangaDialog
+          }, {
+              path: 'rename-manga-image',
+              name: 'RenameMangaImage',
+              component: RenameMangaImageDialog
           }
       ]
     }

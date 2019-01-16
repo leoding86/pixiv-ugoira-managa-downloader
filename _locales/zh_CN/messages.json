@@ -27,7 +27,7 @@
       "message": "可用的元数据（拖动选择）"
    },
    "extDescription": {
-      "message": "能够将Pixiv上的动图保存为GIF图片，将漫画以原始尺寸打包下载。"
+      "message": "能够将Pixiv上的动图保存为 GIF 或 WebM 动画，也可以将漫画以原始尺寸打包下载。"
    },
    "extName": {
       "message": "Pixiv动图&漫画下载器"
@@ -142,5 +142,8 @@
    },
    "manga_image_name_prefix": {
        "message": "漫画图片数字前缀"
+   },
+   "page_num": {
+      "message": "页码"
    }
 }
