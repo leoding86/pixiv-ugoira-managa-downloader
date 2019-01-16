@@ -2,22 +2,27 @@
   <v-dialog v-model="showDialog" max-width="560">
     <v-card>
       <v-card-text>
-        <h2>Rename manga image</h2>
+        <h2>{{ lt('rename_manga_image') }}</h2>
         <div class="section-block">
-          <h3>Quick picks</h3>
+          <h3>{{ lt('quick_picks') }}</h3>
           <v-btn
             small
             v-for="meta in metasConfig"
             :key="meta.value"
             :ripple="false"
+            color="info"
             @click="pickMeta(meta)"
           >{{ meta.title }}</v-btn>
         </div>
         <div class="section-block">
-          <h3>Rename format</h3>
+          <h3>{{ lt('rename_format') }}</h3>
           <v-text-field
+            class="v-input-first"
             ref="renameInput"
             v-model="renameFormat"
+            placeholder="Not set"
+            hint="Example: {authorId}_{id}_{pageNum}"
+            :persistent-hint=true
             @focus="updateInputPos"
             @keyup="updateInputPos"
             @click="updateInputPos"
@@ -90,7 +95,7 @@ export default {
       this.setInputCursor(this.$refs.renameInput.$refs.input, meta.holder);
     },
 
-    _e(string) {
+    lt(string) {
       return cr._e(string);
     }
   }

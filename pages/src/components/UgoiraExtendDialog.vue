@@ -4,7 +4,7 @@
             <v-list two-line>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('extend_enable') }}</v-list-tile-title>
+                        <v-list-tile-title>{{ lt('extend_enable') }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-switch v-model="enableExtend"></v-switch>
@@ -12,8 +12,8 @@
                 </v-list-tile>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('extend_duration_desc') }}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{ _i('enable_extend_desc') }}</v-list-tile-sub-title>
+                        <v-list-tile-title>{{ lt('extend_duration_desc') }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ lt('enable_extend_desc') }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="secondsItems"
@@ -25,7 +25,7 @@
                 </v-list-tile>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ _i('extend_duration_seconds_title') }}</v-list-tile-title>
+                        <v-list-tile-title>{{ lt('extend_duration_seconds_title') }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="extendDurationItems"
@@ -96,8 +96,8 @@ export default {
               window.cr.storage.items.extendDuration = _this.extendDuration
           })
       },
-      
-      _i (string) {
+
+      lt (string) {
         return cr._e(string);
       }
   }
