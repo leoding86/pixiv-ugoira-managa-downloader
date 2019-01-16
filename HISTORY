@@ -6,6 +6,10 @@ If you are using version < 1.5, plz update it asap.
 GitHub:
 https://github.com/leoding86/pixiv-ugoira-managa-downloader
 ----------------------------------------------
+v1.8.1
+Update setting styles;
+Fix bug.
+
 v1.8
 Refactor rename feature for easy use;
 Fix issue about missing buttons sometimes.
