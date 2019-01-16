@@ -116,29 +116,23 @@
    "open_settings_intro": {
        "message": "请右键点击图标选择\"选项\"进入设置页面"
    },
-   "saved_file_title": {
-        "message": "保存文件名称"
-   },
-   "saved_file_title_desc": {
-        "message": "修改保存的文件名"
-   },
-   "drag_click_metas": {
-       "message": "拖动排序，点击启用/禁用元数据"
-   },
    "extend_enable": {
        "message": "启用延长时长功能"
    },
-   "saved_manga_file_title": {
-        "message": "漫画压缩包的文件名"
+   "rename_ugoira": {
+      "message": "重命名动图文件"
    },
-   "saved_manga_file_title_desc": {
-        "message": "修改下载的漫画压缩包文件名称"
+   "rename_manga": {
+      "message": "重命名漫画"
    },
-   "saved_manga_image_file_title": {
-       "message": "漫画图片文件名前缀"
+   "rename_manga_image": {
+      "message": "重命名漫画内图片"
    },
-   "saved_manga_image_file_title_desc": {
-       "message": "修改漫画图片文件名的前缀"
+   "quick_picks": {
+      "message": "快速选取"
+   },
+   "rename_format": {
+      "message": "重命名格式"
    },
    "manga_image_name_prefix": {
        "message": "漫画图片数字前缀"

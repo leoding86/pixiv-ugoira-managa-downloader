@@ -116,29 +116,23 @@
    "open_settings_intro": {
        "message": "Please right-click the icon and click \"Options\" to open settings page"
    },
-   "saved_file_title": {
-        "message": "Saved file title"
-   },
-   "saved_file_title_desc": {
-        "message": "Change the saved file title when downloading ugoira"
-   },
-   "drag_click_metas": {
-       "message": "Drag to sort, click to enable/disable meta"
-   },
    "extend_enable": {
        "message": "Turn on/off extend duration function"
    },
-   "saved_manga_file_title": {
-        "message": "Manga zip file saved title"
+   "rename_ugoira": {
+      "message": "Rename downloaded ugoira"
    },
-   "saved_manga_file_title_desc": {
-        "message": "Change the saved manga zip file title when downloading manga"
+   "rename_manga": {
+      "message": "Rename downloaded manga"
    },
-   "saved_manga_image_file_title": {
-       "message": "Manga images title prefix"
+   "rename_manga_image": {
+      "message": "Rename images in the downloaded manga"
    },
-   "saved_manga_image_file_title_desc": {
-       "message": "Change title prefix of the saved manga images"
+   "quick_picks": {
+      "message": "Quick picks"
+   },
+   "rename_format": {
+      "message": "Rename format"
    },
    "manga_image_name_prefix": {
        "message": "Manga images page number prefix"
