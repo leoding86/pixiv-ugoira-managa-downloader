@@ -9,7 +9,7 @@
 
     adapter.inital().then(function (context) {
         // ui staff
-        let targetElement = document.querySelector('article figcaption') || document.querySelector('article figure');
+        let targetElement = guessButtonsContainer();
         let buttonsWrapper = createButtonsWrapper(targetElement);
         let buttonStyle = !!targetElement ? buttonInlineStyle : buttonDefaultStyle;
         let downloadZipBtn = new Button(buttonsWrapper, common.lan.msg('downloadZipFile'), buttonStyle);
@@ -288,6 +288,12 @@
         }
 
         return wrapper;
+    }
+
+    function guessButtonsContainer() {
+        return document.querySelector('article figcaption') || 
+            document.querySelector('article figure') ||
+            document.querySelector('figcaption');
     }
 
     function downloadFile(url) {
