@@ -18,7 +18,7 @@
    "manifest_version": 2,
    "name": "__MSG_extName__",
    "permissions": [ "webRequest", "storage", "*://*.pixiv.net/*", "*://*.pximg.net/*" ],
-   "version": "1.8.1",
+   "version": "1.8.2",
    "web_accessible_resources": [ "img/download.png" ],
    "options_page": "pages/dist/index.html"
 }
