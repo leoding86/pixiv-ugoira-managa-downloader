@@ -1,5 +1,5 @@
 (function(common, button, RetryTicker) {
-    // Load extension config 
+    // Load extension config
     common.storage.get(null, function(extensionItems) {
         if (extensionItems.mangaImageRenameFormat.indexOf('{pageNum}') < 0) {
             extensionItems.mangaImageRenameFormat += '{pageNum}';
@@ -9,19 +9,19 @@
             let $wrapper = document.createElement('div');
             $wrapper.className = common.classname('download-btns-wrapper');
             $wrapper.style = 'position:fixed;z-index:2501;top:45px;right:16px;border-radius:5px;overflow:hidden;box-shadow:2px 2px 2px #ccc';
-    
+
             let $pageMenu = document.querySelector('.page-menu');
-    
+
             $pageMenu.parentNode.insertBefore($wrapper, $pageMenu.nextSibling);
-    
+
             return $wrapper;
         }
-    
+
         /**
          * Generate file title string
-         * @param {Object} metasConfig 
-         * @param {Object} contextMetas 
-         * @param {String} fallbackTitle 
+         * @param {Object} metasConfig
+         * @param {Object} contextMetas
+         * @param {String} fallbackTitle
          * @return {String}
          */
         function getTitle(metasConfig, contextMetas, fallbackTitle) {
@@ -30,7 +30,7 @@
                 console.log('title: ' + fallbackTitle);
                 return fallbackTitle;
             }
-    
+
             let title = '';
             metasConfig.forEach(function(meta) {
                 if (common.metas[meta.value] !== undefined && !!meta.enable === true) {
@@ -44,24 +44,24 @@
                     }
                 }
             });
-    
+
             title = title.length < 1 ? fallbackTitle : title.slice(0, -1);
             console.log('title: ' + title);
             return title;
         }
-    
+
         /**
          * Request image page content
          * @param {string} url Manga page image url
          */
         function requestImagePage(url) {
             let _this = this;
-    
+
             return new Promise(function (resolve, reject) {
                 var pxhr = new XMLHttpRequest();
                 pxhr.open('get', url);
                 pxhr.onload = function() {
-                    resolve(this.responseText); 
+                    resolve(this.responseText);
                 };
                 pxhr.onerror = function() {
                     if (!retryTicker.reachLimit()) {
@@ -73,9 +73,9 @@
                 pxhr.send();
             });
         }
-    
+
         /**
-         * 
+         *
          * @param {String} url Manga image url
          * @param {JSZip} zip JSZip instance
          */
@@ -111,7 +111,7 @@
                 ixhr.send();
             })
         }
-    
+
         function Queue() {
             this.stack = [];
             this.index = 0;
@@ -121,27 +121,27 @@
             this.onItemComplete;
             this.onItemFail;
         }
-    
+
         Queue.prototype = {
             add: function (item) {
                 this.stack.push(item);
                 this.total = this.stack.length;
             },
-    
+
             next: function () {
                 if (this.index < this.stack.length) {
                     this.index++;
                 }
             },
-    
+
             current: function () {
                 return this.stack[this.index];
             },
-    
+
             start: function (callback, done) {
                 let _this = this,
                     item;
-    
+
                 if (item = this.current()) {
                     callback(item).then(function () {
                         _this.complete++;
@@ -164,7 +164,7 @@
                 }
             }
         }
-    
+
         var downloading = false,
             retryTicker = new RetryTicker(),
             queue = new Queue();
@@ -174,25 +174,25 @@
             startIndex = 0,
             splitSize = 100,
             chunks = [];
-    
+
         while (startIndex < pixivContext.images.length - 1) {
             var chunk = {};
             chunk.start = startIndex;
-    
+
             if (startIndex + splitSize < pixivContext.images.length) {
                 chunk.end = startIndex + splitSize;
             } else {
                 chunk.end = pixivContext.images.length - 1;
             }
-    
+
             chunks.push(chunk);
-    
+
             startIndex = chunk.end + 1;
         }
-        
+
         var zip;
         var fullSizePageA = document.querySelectorAll('a.full-size-container');
-    
+
         chunks.forEach(function (chunk) {
             let startPage = parseInt(chunk.start) + 1,
                 endPage = parseInt(chunk.end) + 1,
@@ -201,33 +201,36 @@
                 //     '_' + startPage + '-' + endPage + '.zip';
                 fileName = common.formatName(extensionItems.mangaRenameFormat, pixivContext, pixivContext.illustId)
                     + '_' + startPage + '-' + endPage + '.zip';
-    
+
             $downloadBtn = button.addBtn(common.lan.msg('downloadPage') + ' ' + startPage + '-' + endPage, common.classname("download-btn_" + startPage + '-' + endPage), $wrapper);
             $downloadBtn.style = "display:block;padding:8px;background:#fff;border-bottom:1px solid #eee";
             $downloadBtn.addEventListener("click", function () {
                 let $btn = this;
                 let oldText = $btn.innerText;
-    
+
                 if ($btn.getAttribute('complete')) {
                     return;
                 }
-    
+
                 if (downloading) {
                     alert(common.lan.msg('waitDownload'));
                     return;
                 }
-    
+
+                // Change download btn text for preparing to download
+                $btn.innerText = common.lan.msg('pending');
+
                 downloading = true;
                 zip = new JSZip();
-    
+
                 queue.onItemComplete = function () {
                     $btn.innerText = oldText + ' C:' + queue.complete + '/F:' + queue.fail + '/T:' + queue.total;
                 }
-    
+
                 queue.onItemFail = function (page) {
                     $btn.innerText = oldText + ' C:' + queue.complete + '/F:' + queue.fail + '/T:' + queue.total;
                 }
-    
+
                 queue.onDone = function () {
                     zip.generateAsync({
                         type: 'blob',
@@ -239,11 +242,11 @@
                         downloading = false;
                     });
                 }
-    
+
                 for (var i = chunk.start; i <= chunk.end; i++) {
                     queue.add(fullSizePageA[i].href);
                 }
-    
+
                 queue.start(function (url) {
                     return new Promise(function (resolve, reject) {
                         requestImagePage(url).then(function (body) {
