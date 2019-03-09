@@ -80,8 +80,8 @@
    "used_ugoira_meta": {
       "message": "Metas is in used"
    },
-   "ugoira_quanlity": {
-       "message": "Ugoira quanlity"
+   "ugoira_quality": {
+       "message": "Ugoira quality"
    },
    "ugoira_best": {
        "message": "Best"
@@ -92,8 +92,8 @@
    "ugoira_normal": {
        "message": "Normal"
    },
-   "quanlity": {
-       "message": "Quanlity"
+   "quality": {
+       "message": "Quality"
    },
    "extend_duration": {
        "message": "Extend duration"

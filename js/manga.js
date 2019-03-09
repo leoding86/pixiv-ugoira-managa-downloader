@@ -1,7 +1,9 @@
 (function(common, button, RetryTicker) {
     // Load extension config
     common.storage.get(null, function(extensionItems) {
-        if (extensionItems.mangaImageRenameFormat.indexOf('{pageNum}') < 0) {
+        if (!extensionItems.mangaImageRenameFormat ||
+            extensionItems.mangaImageRenameFormat.indexOf('{pageNum}') < 0
+        ) {
             extensionItems.mangaImageRenameFormat += '{pageNum}';
         }
 

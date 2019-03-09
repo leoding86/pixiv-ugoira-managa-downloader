@@ -16,7 +16,7 @@
                 </v-list-tile>
                 <v-list-tile>
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ tl('quanlity') }}</v-list-tile-title>
+                        <v-list-tile-title>{{ tl('quality') }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
                         <v-select :items="quanlityItems"
