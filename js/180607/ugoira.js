@@ -18,7 +18,19 @@
             downloadZipBtn.el.download = common.formatName(items.ugoiraRenameFormat, context, context.illustId + '_' + context.illustTitle) + '.zip';
         });
 
-        downloadResources(context.illustOriginalSrc).then(function (zipData) {
+        /**
+         * Create a progresser component and append to target element
+         */
+        var progressor = new Progressor();
+        progressor.appendTo(buttonsWrapper);
+
+        downloadResources(context.illustOriginalSrc, {
+            onProgress: function (progress) {
+                progressor.setProgress(progress);
+            }
+        }).then(function (zipData) {
+            progressor.destory();
+
             let generateGifButton = new Button(buttonsWrapper, common.lan.msg('generate_gif_btn_text'), buttonStyle);
             generateGifButton.el.addEventListener('click', function () {
                 if (status.generatingGif) {
@@ -71,12 +83,16 @@
      * Download zip resource
      * @param {string} src
      */
-    function downloadResources(src) {
+    function downloadResources(src, options) {
         return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest(),
+                progress;
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    chrome.runtime.sendMessage({from: 'pixivContentScript', to: 'background', step: 'prepare'});
+                    /** 
+                     * Remove temporarily
+                     */
+                    // chrome.runtime.sendMessage({from: 'pixivContentScript', to: 'background', step: 'prepare'});
                     resolve(this.response);
                 }
                 else if (/^(5|4|3)\d\d/.test(this.status)) {
@@ -85,7 +101,16 @@
             }
             xhr.addEventListener("progress", function(e) {
                 if (e.lengthComputable) {
-                    chrome.runtime.sendMessage({from: 'pixivContentScript', to: 'background', step: 'download', p: Math.round(e.loaded * 100 / e.total)});
+                    progress = e.loaded / e.total;
+
+                    if (options && typeof options.onProgress === 'function') {
+                        options.onProgress.call(xhr, progress);
+                    }
+
+                    /**
+                     * Remove temporarily
+                     */
+                    // chrome.runtime.sendMessage({from: 'pixivContentScript', to: 'background', step: 'download', p: Math.round(progress * 100)});
                 }
             });
             xhr.overrideMimeType("text/plain; charset=x-user-defined");
@@ -290,6 +315,9 @@
         return wrapper;
     }
 
+    /**
+     * Guess document element which buttons should be placed in
+     */
     function guessButtonsContainer() {
         return document.querySelector('article figcaption') || 
             document.querySelector('article figure') ||
@@ -300,6 +328,14 @@
         window.location.href = url;
     }
 
+    /**
+     * Get title of the GIF or WebM was generated from the ugoria
+     * @deprecated since 1.8.2
+     * @param {Array} metasConfig 
+     * @param {Object} contextMetas 
+     * @param {string} fallbackTitle
+     * @returns {string}
+     */
     function getUgoiraDownloadTitle(metasConfig, contextMetas, fallbackTitle) {
         if (metasConfig === undefined || metasConfig.length == 0) {
             console.log('title: ' + fallbackTitle);
@@ -330,4 +366,51 @@
         console.log('title: ' + title);
         return title;
     };
+
+    /**
+     * Progressor constructor
+     */
+    function Progressor() {
+        this.progress = 0,
+        this.literalTotalProgress,
+        this.progressWrapper;
+
+        this.createComponent();
+    }
+
+    Progressor.prototype = {
+        createComponent: function() {
+            this.progressWrapper = document.createElement('wrapper');
+            this.progressWrapper.style = 'display:inline-block;margin-right:5px;background-color: #0096fa;border: none;border-radius: 16px;color: #fff;cursor: pointer;font-size: 12px;font-weight: 700;line-height: 1;padding: 10px 25px;text-align: center;transition: background-color .2s;cursor:pointer;';
+            this.progressWrapper.innerText = '0%';
+        },
+
+        appendTo: function (element) {
+            element.appendChild(this.progressWrapper);
+        },
+
+        setLiteralTotalProgress: function (progress) {
+            this.literalTotalProgress = progress;
+        },
+
+        updateProgress: function () {
+            this.progressWrapper.innerText = Math.round(this.progress * 1000) / 10 + '%';
+        },
+
+        setProgress: function (progress) {
+            this.progress = progress;
+            this.updateProgress();
+        },
+
+        setLiteralProgress: function (progress) {
+            this.setProgress(progress / this.literalTotalProgress);
+        },
+
+        destory: function () {
+            /**
+             * https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
+             */
+            this.progressWrapper.remove();
+        }
+    }
 })(_pumd.common, _pumd.UgoiraAdapter, _pumd.button);
