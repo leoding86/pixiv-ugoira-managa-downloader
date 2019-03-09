@@ -139,5 +139,8 @@
    },
    "page_num": {
       "message": "Page No."
+   },
+   "pending": {
+      "message": "Pending"
    }
 }
